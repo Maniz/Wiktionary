@@ -11,30 +11,20 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Navigation;
 
 // Pour en savoir plus sur le modèle d'élément Page vierge, consultez la page http://go.microsoft.com/fwlink/?LinkId=234238
-using GalaSoft.MvvmLight.Views;
 
 namespace Wiktionary
 {
     /// <summary>
     /// Une page vide peut être utilisée seule ou constituer une page de destination au sein d'un frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class Definitions : Page
     {
-        public MainPage()
+        public Definitions()
         {
             this.InitializeComponent();
-        }
-
-        private void Liste_Definition_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(Definitions));
-        }
-
-        private void Ajouter_Definition_Click(object sender, RoutedEventArgs e)
-        {
-            Frame.Navigate(typeof(Definitions));
         }
     }
 }

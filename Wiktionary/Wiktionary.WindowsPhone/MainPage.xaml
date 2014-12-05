@@ -12,8 +12,8 @@
         <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" Margin="0, 100" />
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
             <TextBox Margin="15, 0, 15, 0"></TextBox>
-            <Button HorizontalAlignment="Stretch" Content="Liste des définitions" Margin="15, 0, 15, 0"/>
-            <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" Margin="15, 0, 15, 0"/>
+            <Button HorizontalAlignment="Stretch" Content="Liste des définitions" Margin="15, 0, 15, 0" Click="Liste_Definition_Click"/>
+            <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" Margin="15, 0, 15, 0" Click="Ajouter_Definition_Click"/>
             <Button HorizontalAlignment="Stretch" Content="Paramètres" Margin="15, 0, 15, 0"/>
         </StackPanel>
     </Grid>
