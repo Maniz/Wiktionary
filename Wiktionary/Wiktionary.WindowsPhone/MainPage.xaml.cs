@@ -44,5 +44,15 @@ namespace Wiktionary
             // Si vous utilisez le NavigationHelper fourni par certains modèles,
             // cet événement est géré automatiquement.
         }
+
+        private void Liste_Definition_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Definitions));
+        }
+
+        private void Ajouter_Definition_Click(object sender, RoutedEventArgs e)
+        {
+            Frame.Navigate(typeof(Definitions));
+        }
     }
 }

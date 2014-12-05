@@ -1,0 +1,45 @@
+﻿<Page
+    x:Class="Wiktionary.Definitions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wiktionary"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="DefinitionTemplate">
+            <Grid Width="200">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding valeur}" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding definition}" VerticalAlignment="Top"/>
+                    <StackPanel>
+                        <HyperlinkButton Content="Modifier"/>
+                        <HyperlinkButton Content="Supprimer" />
+                    </StackPanel>
+                    <Line></Line>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+    <Pivot>
+        <PivotItem Header="Local">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding DefinitionLocalList}" ItemTemplate="{StaticResource DefinitionTemplate}"></ListView>
+            </Grid>
+        </PivotItem>
+        <PivotItem Header="Roaming">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding DefinitionRoamingList}" ItemTemplate="{StaticResource DefinitionTemplate}"></ListView>
+            </Grid>
+        </PivotItem>
+        <PivotItem Header="Public">
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding DefinitionPublicList}" ItemTemplate="{StaticResource DefinitionTemplate}"></ListView>
+            </Grid>
+        </PivotItem>
+    </Pivot>
+</Page>
