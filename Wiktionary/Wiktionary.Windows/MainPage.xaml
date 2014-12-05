@@ -8,6 +8,14 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" Margin="0, 100" />
+        <StackPanel VerticalAlignment="Center">
+            <SearchBox Height="35" Width="746" HorizontalAlignment="Stretch"/>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
+            <Button HorizontalAlignment="Stretch" Content="Liste des définitions" FontSize="18" Width="250" Height="50"/>
+            <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" FontSize="18" Width="250" Height="50"/>
+            <Button HorizontalAlignment="Stretch" Content="Paramètres" FontSize="18" Width="250" Height="50"/>
+        </StackPanel>
+        </StackPanel>
     </Grid>
 </Page>
