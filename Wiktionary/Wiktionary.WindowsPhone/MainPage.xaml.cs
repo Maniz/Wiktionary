@@ -52,7 +52,7 @@ namespace Wiktionary
 
         private void Ajouter_Definition_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Definitions));
+            Frame.Navigate(typeof(Edition));
         }
     }
 }

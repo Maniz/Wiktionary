@@ -1,0 +1,24 @@
+﻿<Page
+    x:Class="Wiktionary.Edition"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wiktionary"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="using:Wiktionary.ViewModel"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Grid DataContext="{Binding EditionViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
+        <StackPanel>
+            <TextBlock Name="TitreEdition" Text="" FontSize="28" HorizontalAlignment="Center"></TextBlock>
+            <TextBlock Text="Mot :" FontSize="20"></TextBlock>
+            <TextBox Name="ValeurMot"></TextBox>
+            <TextBlock Text="Définition : " FontSize="20"></TextBlock>
+            <RichEditBox Name="DefinitionMot" Height="150" ></RichEditBox>
+            <TextBlock Text="Dépôt : " FontSize="20"></TextBlock>
+            <ComboBox Name="Test" SelectedItem="{Binding DepotSelectionne, Mode=TwoWay}" ItemsSource="{Binding DepotValeurs, Mode=TwoWay}" SelectedIndex=""/>
+            <Button Content="Valider" HorizontalAlignment="Center"/>
+        </StackPanel>
+        </Grid>
+</Page>

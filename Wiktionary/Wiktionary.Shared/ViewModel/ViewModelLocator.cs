@@ -43,13 +43,22 @@ namespace Wiktionary.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<EditionViewModel>();
         }
 
-        public MainViewModel Main
+        public MainViewModel MainViewModel
         {
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+
+        public EditionViewModel EditionViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EditionViewModel>();
             }
         }
         

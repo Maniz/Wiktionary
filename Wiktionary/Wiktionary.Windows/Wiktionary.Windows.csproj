@@ -115,6 +115,9 @@
     <Compile Include="Definitions.xaml.cs">
       <DependentUpon>Definitions.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Edition.xaml.cs">
+      <DependentUpon>Edition.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -135,6 +138,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Definitions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Edition.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
