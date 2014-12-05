@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding Main, Mode=TwoWay, Source={StaticResource Locator}}">
         <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" Margin="0, 100" />
         <StackPanel VerticalAlignment="Center">
             <SearchBox Height="35" Width="746" HorizontalAlignment="Stretch"/>
