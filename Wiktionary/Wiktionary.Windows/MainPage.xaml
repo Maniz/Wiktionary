@@ -12,10 +12,9 @@
         <StackPanel VerticalAlignment="Center">
             <SearchBox Height="35" Width="746" HorizontalAlignment="Stretch"/>
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-            <Button HorizontalAlignment="Stretch" Content="Liste des définitions" FontSize="18" Width="250" Height="50" Click="Liste_Definition_Click"/>
-                <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" FontSize="18" Width="250" Height="50" Click="Ajouter_Definition_Click"/>
-            <Button HorizontalAlignment="Stretch" Content="Paramètres" FontSize="18" Width="250" Height="50"/>
-        </StackPanel>
+                <Button HorizontalAlignment="Stretch" Content="Liste des définitions" FontSize="18" Width="375" Height="50" Click="Liste_Definition_Click"/>
+                <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" FontSize="18" Width="375" Height="50" Click="Ajouter_Definition_Click"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Page>

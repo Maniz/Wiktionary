@@ -25,6 +25,7 @@ namespace Wiktionary
         public Edition()
         {
             this.InitializeComponent();
+            ComboDepot.SelectedItem = ComboDepot.Items.First();
         }
 
         /// <summary>

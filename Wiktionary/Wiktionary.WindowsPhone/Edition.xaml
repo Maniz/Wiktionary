@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid DataContext="{Binding EditionViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
+    <Grid DataContext="{Binding EditionViewModel, Mode=TwoWay, Source={StaticResource Locator}}" Margin="5">
         <StackPanel>
             <TextBlock Name="TitreEdition" Text="" FontSize="28" HorizontalAlignment="Center"></TextBlock>
             <TextBlock Text="Mot :" FontSize="20"></TextBlock>
@@ -17,7 +17,7 @@
             <TextBlock Text="Définition : " FontSize="20"></TextBlock>
             <RichEditBox Name="DefinitionMot" Height="150" ></RichEditBox>
             <TextBlock Text="Dépôt : " FontSize="20"></TextBlock>
-            <ComboBox Name="Test" SelectedItem="{Binding DepotSelectionne, Mode=TwoWay}" ItemsSource="{Binding DepotValeurs, Mode=TwoWay}" SelectedIndex=""/>
+            <ComboBox Name="ComboDepot" ItemsSource="{Binding DepotValeurs}" />
             <Button Content="Valider" HorizontalAlignment="Center"/>
         </StackPanel>
         </Grid>
