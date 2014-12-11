@@ -8,12 +8,47 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid>
-        <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" Margin="0, 100" />
-        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-            <TextBox Margin="15, 0, 15, 0"></TextBox>
-            <Button HorizontalAlignment="Stretch" Content="Liste des définitions" Margin="15, 0, 15, 0" Click="Liste_Definition_Click"/>
-            <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" Margin="15, 0, 15, 0" Click="Ajouter_Definition_Click"/>
+    <Page.Resources>
+        <DataTemplate x:Key="DefinitionTemplate">
+            <Grid Width="200">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Definition}" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Valeur}" VerticalAlignment="Top"/>
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Center"  Orientation="Horizontal">
+                            <HyperlinkButton Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0"/>
+                            <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0"/>
+                        </StackPanel>
+                    </Grid>
+                    <Line StrokeThickness="2" Fill="White" ></Line>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
+        <StackPanel VerticalAlignment="Top">
+            <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay}" Margin="2"/>
+                <Button Content="Ajouter" Grid.Column="1" Margin="2"></Button>
+            </Grid>
+            <ListView  ItemsSource="{Binding ListeDefinitions}" ItemTemplate="{StaticResource DefinitionTemplate}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>

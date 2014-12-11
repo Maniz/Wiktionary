@@ -15,7 +15,7 @@
             <TextBlock Text="Mot :" FontSize="20"></TextBlock>
             <TextBox Name="ValeurMot"></TextBox>
             <TextBlock Text="Définition : " FontSize="20"></TextBlock>
-            <RichEditBox Name="DefinitionMot" Height="150" ></RichEditBox>
+            <RichEditBox Name="DefinitionMot" Height="150"  ></RichEditBox>
             <TextBlock Text="Dépôt : " FontSize="20"></TextBlock>
             <ComboBox Name="ComboDepot" ItemsSource="{Binding DepotValeurs}" />
             <Button Content="Valider" HorizontalAlignment="Center"/>

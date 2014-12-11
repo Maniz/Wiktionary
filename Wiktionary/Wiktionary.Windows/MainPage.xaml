@@ -6,15 +6,36 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="DefinitionTemplate">
+            <Grid Width="200">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Definition}" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Valeur}" VerticalAlignment="Top"/>
+                    <Grid>
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto">
+                            <HyperlinkButton Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0"/>
+                            <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0"/>
+                        </StackPanel>
+                    </Grid>
+                    <Line StrokeThickness="2" Fill="White" ></Line>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
-        <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" Margin="0, 100" />
-        <StackPanel VerticalAlignment="Center">
-            <SearchBox Height="35" Width="746" HorizontalAlignment="Stretch"/>
-            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Orientation="Horizontal">
-                <Button HorizontalAlignment="Stretch" Content="Liste des définitions" FontSize="18" Width="375" Height="50" Click="Liste_Definition_Click"/>
-                <Button HorizontalAlignment="Stretch" Content="Ajouter une définition" FontSize="18" Width="375" Height="50" Click="Ajouter_Definition_Click"/>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+            <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
+            <StackPanel Orientation="Horizontal">
+                <TextBox Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay}"/>
+                <Button Content="Ajouter une nouvelle définition"></Button>
             </StackPanel>
+            <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding ListeDefinitions}" ItemTemplate="{StaticResource DefinitionTemplate}"></ListView>
         </StackPanel>
     </Grid>
 </Page>
