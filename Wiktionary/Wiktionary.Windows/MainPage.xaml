@@ -7,8 +7,30 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.Resources>
+        <Flyout x:Key="EditionFlyout" Placement="Full" >
+            <StackPanel>
+                <TextBlock Text="Edition" FontSize="32" HorizontalAlignment="Center"/>
+                <TextBlock Text="Définition :" FontSize="18"/>
+                <TextBox TextWrapping="Wrap" Height="128"/>
+                <ComboBox ItemsSource="{Binding DepotValeurs}"/>
+                <Grid>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button Content="Annuler" Click="Annuler_Click"/>
+                        <Button Content="Valider"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <Flyout.FlyoutPresenterStyle>
+                <Style TargetType="FlyoutPresenter">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="5"/>
+                </Style>
+            </Flyout.FlyoutPresenterStyle>
+        </Flyout>
+
         <DataTemplate x:Key="DefinitionTemplate">
-            <Grid Width="200">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>
@@ -17,12 +39,12 @@
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Definition}" FontSize="18" FontWeight="Bold"/>
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Valeur}" VerticalAlignment="Top"/>
                     <Grid>
-                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="Auto">
-                            <HyperlinkButton Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0"/>
+                        <StackPanel HorizontalAlignment="Center"  Orientation="Horizontal">
+                            <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click"/>
                             <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0"/>
                         </StackPanel>
                     </Grid>
-                    <Line StrokeThickness="2" Fill="White" ></Line>
+                    <Line StrokeThickness="2" Fill="White" />
                 </StackPanel>
             </Grid>
         </DataTemplate>
@@ -33,9 +55,15 @@
             <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
             <StackPanel Orientation="Horizontal">
                 <TextBox Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay}"/>
-                <Button Content="Ajouter une nouvelle définition"></Button>
+                <Button Name="AjouterBouton" Content="Ajouter une nouvelle définition" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Ajouter_Click"/>
             </StackPanel>
-            <ListView HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ItemsSource="{Binding ListeDefinitions}" ItemTemplate="{StaticResource DefinitionTemplate}"></ListView>
+            <ListView Name="ListeDefinition" ItemsSource="{Binding ListeDefinitions}" ItemTemplate="{StaticResource DefinitionTemplate}">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
         </StackPanel>
     </Grid>
 </Page>

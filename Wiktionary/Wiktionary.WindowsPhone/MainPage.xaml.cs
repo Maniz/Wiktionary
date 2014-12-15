@@ -45,14 +45,21 @@ namespace Wiktionary
             // cet événement est géré automatiquement.
         }
 
-        private void Liste_Definition_Click(object sender, RoutedEventArgs e)
+        private void Ajouter_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Definitions));
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender); 
         }
 
-        private void Ajouter_Definition_Click(object sender, RoutedEventArgs e)
+        private void Modifier_Click(object sender, RoutedEventArgs e)
         {
-            Frame.Navigate(typeof(Edition));
+            FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender); 
+        }
+
+        private void Annuler_Click(object sender, RoutedEventArgs e)
+        {
+            var flyout = FlyoutBase.GetAttachedFlyout(AjouterBouton) ?? FlyoutBase.GetAttachedFlyout(ListeDefinition.FindName("ModifierBouton") as Button);
+
+            if (flyout != null) flyout.Hide();
         }
     }
 }

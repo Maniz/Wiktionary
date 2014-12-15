@@ -43,7 +43,6 @@ namespace Wiktionary.ViewModel
             ////}
 
             SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<EditionViewModel>();
         }
 
         public MainViewModel MainViewModel
@@ -51,14 +50,6 @@ namespace Wiktionary.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
-        }
-
-        public EditionViewModel EditionViewModel
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<EditionViewModel>();
             }
         }
         
