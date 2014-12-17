@@ -15,7 +15,7 @@ namespace Wiktionary.ViewModel
     {
 
         #region Propriétés
-        private string _message;
+        
         public enum Depot
         {
             Local,
@@ -23,33 +23,21 @@ namespace Wiktionary.ViewModel
             Public
         }
 
-        public string Message
+        private Depot _depotAjout;
+
+        public Depot DepotAjout
         {
-            get { return _message; }
+            get { return _depotAjout; }
             set
             {
-                _message = value;
+                _depotAjout = value;
                 RaisePropertyChanged();
             }
         }
 
+        private string _motRecherche;
 
-        private Mot _motAjoute;
-
-        public Mot MotAjoute
-        {
-            get { return _motAjoute; }
-            set
-            {
-                _motAjoute = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
-        private String _motRecherche;
-        
-        public String MotRecherche
+        public string MotRecherche
         {
             get { return _motRecherche; }
             set
@@ -59,6 +47,19 @@ namespace Wiktionary.ViewModel
                 RaisePropertyChanged();
             }
         }
+
+        private string _nouvelleDefinition;
+                
+        public string NouvelleDefinition
+        {
+            get { return _nouvelleDefinition; }
+            set
+            {
+                _nouvelleDefinition = value;
+                RaisePropertyChanged();
+            }
+        }
+        
 
         private ObservableCollection<Mot> _listeDefinition = new ObservableCollection<Mot>();
         public ObservableCollection<Mot> ListeDefinitions
@@ -73,9 +74,7 @@ namespace Wiktionary.ViewModel
 
         private void RechargeList()
         {
-            //TODO: Charger la liste via les WS
-            _listeDefinition.Add(new Mot { Definition = "Test", Valeur = "Valeur Valeur Valeur Valeur Valeur ValeurValeurValeur Valeur Valeur" });
-            _listeDefinition.Add(new Mot { Definition = "Test2", Valeur = "Valeur2" });
+            //TODO
         }
 
         #endregion
@@ -83,6 +82,7 @@ namespace Wiktionary.ViewModel
         #region Commandes
 
         public ICommand AjouterMotCommand { get; set; }
+        public ICommand SupprimerMotCommand { get; set; }
 
 
         #endregion
@@ -92,17 +92,59 @@ namespace Wiktionary.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            BaseDeDonnee.Instance.InitialiserBddLocale();
+            BaseDeDonneeLocale.Instance.InitialiserBddLocale();
             AjouterMotCommand = new RelayCommand(AjouterMotLocal);
+            SupprimerMotCommand = new RelayCommand<string>(param => SupprimerMot(new Mot() { Cle = param}));
+            RecupererDefinitions();
+            DepotAjout = Depot.Local;
         }
 
         #region Méthodes
 
-        private void AjouterMotLocal()
+        private async void RecupererDefinitions()
         {
-            Message = BaseDeDonnee.Instance.AjouterMotLocal(_motAjoute).Result;
+            IEnumerable<Mot> liste = await BaseDeDonneesPublique.Instance.RecupererDefinitions();
+            ListeDefinitions = new ObservableCollection<Mot>(liste.Union(await BaseDeDonneeLocale.Instance.RecupererDefinitions()));
         }
 
+        private async void AjouterMotLocal()
+        {
+            Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout};
+            string result;
+            switch (DepotAjout)
+            {
+                case Depot.Local:
+                    result = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
+                    break;
+                case Depot.Roaming:
+                    //Message = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
+                    break;
+                case Depot.Public:
+                    result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
+                    break;
+            }
+        }
+
+        private async void SupprimerMot(Mot motSupprime)
+        {
+            string result = null;
+
+            switch (motSupprime.Depot)
+            {
+                case Depot.Local:
+                    result = await BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime);
+                    break;
+                case Depot.Roaming:
+                    //Message = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
+                    break;
+                case Depot.Public:
+                    //result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
+                    break;   
+            }
+
+            if(result == "Element supprimé")
+                ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == motSupprime.Word));
+        }
 
         public IEnumerable<Depot> DepotValeurs
         {

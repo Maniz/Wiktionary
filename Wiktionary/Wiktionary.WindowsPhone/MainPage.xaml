@@ -39,7 +39,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel>
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Definition}" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Valeur}" VerticalAlignment="Top"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Word}" VerticalAlignment="Top"/>
                     <Grid>
                         <StackPanel HorizontalAlignment="Center"  Orientation="Horizontal">
                             <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click"/>

@@ -11,6 +11,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wiktionary.Windows", "Wikti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wiktionary.WindowsPhone", "Wiktionary\Wiktionary.WindowsPhone\Wiktionary.WindowsPhone.csproj", "{E943316C-3901-4A08-B5BD-8A6C3465E718}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{36E0C728-ECC2-48BC-873D-8E98D0A378FB}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Wiktionary\Wiktionary.Shared\Wiktionary.Shared.projitems*{4d883201-0400-4155-b7e9-a69553cace55}*SharedItemsImports = 4

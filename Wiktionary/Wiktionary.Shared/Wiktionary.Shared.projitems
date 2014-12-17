@@ -15,7 +15,10 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Donnees\BaseDeDonnee.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Donnees\BaseDeDonneeLocale.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Donnees\BaseDeDonneesPublique.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Donnees\BaseDeDonneesRoaming.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Donnees\IBaseDeDonnees.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Model\Mot.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLite.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SQLiteAsync.cs" />
