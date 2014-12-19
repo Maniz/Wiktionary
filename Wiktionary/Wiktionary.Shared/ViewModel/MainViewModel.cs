@@ -110,7 +110,7 @@ namespace Wiktionary.ViewModel
         private async void AjouterMotLocal()
         {
             Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout};
-            string result;
+            string result = null;
             switch (DepotAjout)
             {
                 case Depot.Local:
@@ -123,6 +123,10 @@ namespace Wiktionary.ViewModel
                     result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
                     break;
             }
+
+            if(result == "Element ajouté")
+                ListeDefinitions.Add(mot);
+
         }
 
         private async void SupprimerMot(Mot motSupprime)
