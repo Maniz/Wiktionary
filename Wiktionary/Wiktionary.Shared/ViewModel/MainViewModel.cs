@@ -20,7 +20,8 @@ namespace Wiktionary.ViewModel
         {
             Local,
             Roaming,
-            Public
+            Public,
+            Tous
         }
 
         private Depot _depotAjout;
@@ -59,22 +60,25 @@ namespace Wiktionary.ViewModel
                 RaisePropertyChanged();
             }
         }
-        
 
-        private ObservableCollection<Mot> _listeDefinition = new ObservableCollection<Mot>();
-        public ObservableCollection<Mot> ListeDefinitions
+
+        private ObservableCollection<Mot> ListeDefinitions { get; set; }
+
+
+        private ObservableCollection<Mot> _listeDefinitionFiltree = new ObservableCollection<Mot>();
+        public ObservableCollection<Mot> ListeDefinitionsFiltree
         {
-            get { return _listeDefinition; }
+            get { return _listeDefinitionFiltree; }
             set
             {
-                _listeDefinition = value;
+                _listeDefinitionFiltree = value;
                 RaisePropertyChanged();
             }
         }
 
         private void RechargeList()
         {
-            //TODO
+            ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower())));
         }
 
         #endregion
@@ -105,6 +109,7 @@ namespace Wiktionary.ViewModel
         {
             IEnumerable<Mot> liste = await BaseDeDonneesPublique.Instance.RecupererDefinitions();
             ListeDefinitions = new ObservableCollection<Mot>(liste.Union(await BaseDeDonneeLocale.Instance.RecupererDefinitions()));
+            ListeDefinitionsFiltree = ListeDefinitions;
         }
 
         private async void AjouterMotLocal()
@@ -121,6 +126,9 @@ namespace Wiktionary.ViewModel
                     break;
                 case Depot.Public:
                     result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
+                    break;
+                case Depot.Tous:
+
                     break;
             }
 
@@ -143,7 +151,9 @@ namespace Wiktionary.ViewModel
                     break;
                 case Depot.Public:
                     //result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
-                    break;   
+                    break;  
+                case Depot.Tous:
+                    break;
             }
 
             if(result == "Element supprimé")
