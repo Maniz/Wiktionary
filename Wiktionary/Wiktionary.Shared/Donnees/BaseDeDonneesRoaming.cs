@@ -9,6 +9,19 @@ namespace Wiktionary.Donnees
 {
     public class BaseDeDonneesRoaming : IBaseDeDonnees
     {
+        private static BaseDeDonneesRoaming _instance;
+        //private 
+
+        private BaseDeDonneesRoaming()
+        {
+            //_connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+        }
+
+        public static BaseDeDonneeLocale Instance
+        {
+            get { return _instance ?? (_instance = new BaseDeDonneesRoaming()); }
+        }
+
         public Task<ObservableCollection<Mot>> RecupererDefinitions()
         {
             throw new NotImplementedException();
