@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -86,6 +87,7 @@ namespace Wiktionary.ViewModel
         #region Commandes
 
         public ICommand AjouterMotCommand { get; set; }
+        public ICommand EditerMotCommand { get; set; }
         public ICommand SupprimerMotCommand { get; set; }
 
 
@@ -96,8 +98,11 @@ namespace Wiktionary.ViewModel
         /// </summary>
         public MainViewModel()
         {
+            Notification.AbonnementNotification();
+
             BaseDeDonneeLocale.Instance.InitialiserBddLocale();
             AjouterMotCommand = new RelayCommand(AjouterMotLocal);
+            EditerMotCommand = new RelayCommand(EditerMotLocal);
             SupprimerMotCommand = new RelayCommand<string>(param => SupprimerMot(new Mot() { Cle = param}));
             RecupererDefinitions();
             DepotAjout = Depot.Local;
@@ -112,9 +117,9 @@ namespace Wiktionary.ViewModel
             ListeDefinitionsFiltree = ListeDefinitions;
         }
 
-        private async void AjouterMotLocal()
+        private void AjouterMotLocal()
         {
-            Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout};
+            Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout };
             string result = null;
             switch (DepotAjout)
             {
@@ -132,12 +137,37 @@ namespace Wiktionary.ViewModel
                     break;
             }
 
-            if(result == "Element ajouté")
+            if (result == "Element ajouté")
                 ListeDefinitions.Add(mot);
-
         }
 
-        private async void SupprimerMot(Mot motSupprime)
+        private void EditerMotLocal()
+        {
+            
+            string result = null;
+            switch (DepotAjout)
+            {
+                case Depot.Local:
+                    
+                    break;
+                case Depot.Roaming:
+                    
+                    break;
+                case Depot.Public:
+                    
+                    break;
+                case Depot.Tous:
+
+                    break;
+            }
+
+            if (result == "Element édité")
+            {
+                
+            }
+        }
+
+        private async Task SupprimerMot(Mot motSupprime)
         {
             string result = null;
 

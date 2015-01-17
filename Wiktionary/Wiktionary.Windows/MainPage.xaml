@@ -10,14 +10,15 @@
         <Flyout x:Key="AjoutFlyout" Placement="Full" >
             <StackPanel DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
                 <TextBlock Text="Edition" FontSize="32" HorizontalAlignment="Center" Foreground="White"/>
-                <TextBox Text="{Binding MotRecherche, Mode=TwoWay}"></TextBox>
+                <TextBlock Text="Mot :" FontSize="18" Foreground="White"/>
+                <TextBox Text="{Binding MotRecherche, Mode=TwoWay}"/>
                 <TextBlock Text="Définition :" FontSize="18" Foreground="White"/>
                 <TextBox Text="{Binding NouvelleDefinition, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
                 <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotAjout, Mode=TwoWay}"/>
                 <Grid>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button Content="Annuler" Click="Annuler_Click"/>
-                        <Button Content="Valider" Command="{Binding AjouterMotCommand}"/>
+                        <Button Content="Annuler" Click="Annuler_Click_Flyout"/>
+                        <Button Content="Valider" Click="Ajouter_Click_Flyout" Command="{Binding AjouterMotCommand}"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -33,14 +34,15 @@
         <Flyout x:Key="EditionFlyout" Placement="Full" >
         <StackPanel DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
             <TextBlock Text="Edition" FontSize="32" HorizontalAlignment="Center" Foreground="White"/>
-            <TextBox Text="{Binding MotRecherche, Mode=TwoWay}"></TextBox>
+            <TextBlock Text="Mot :" FontSize="18" Foreground="White"/>
+            <TextBox Text="{Binding MotRecherche, Mode=TwoWay}"/>
             <TextBlock Text="Définition :" FontSize="18" Foreground="White"/>
-            <TextBox Text="{Binding NouvelleDefinition}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
-            <ComboBox ItemsSource="{Binding DepotValeurs}"/>
+            <TextBox Text="{Binding NouvelleDefinition, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
+            <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotAjout, Mode=TwoWay}"/>
             <Grid>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Content="Annuler" Click="Annuler_Click"/>
-                    <Button Content="Valider"/>
+                    <Button Content="Annuler" Click="Annuler_Click_Flyout"/>
+                    <Button Content="Valider" Click="Ajouter_Click_Flyout" Command="{Binding EditerMotCommand}"/>
                 </StackPanel>
             </Grid>
         </StackPanel>
