@@ -31,11 +31,11 @@ namespace Wiktionary.Donnees
             await _connection.CreateTableAsync<Mot>();
         }
 
-        public async Task<ObservableCollection<Mot>> RecupererDefinitions()
+        public ObservableCollection<Mot> RecupererDefinitions()
         {
             try
             {
-                var listeDefinitionsLocales = new ObservableCollection<Mot>(await  _connection.Table<Mot>().ToListAsync());
+                var listeDefinitionsLocales = new ObservableCollection<Mot>(_connection.Table<Mot>().ToListAsync().Result);
                 
                 foreach (var mot in listeDefinitionsLocales)
                 {
@@ -50,43 +50,43 @@ namespace Wiktionary.Donnees
             }
         }
 
-        public async Task<string> AjouterMot(Mot motAjoute)
+        public bool AjouterMot(Mot motAjoute)
         {
             try
             {
-                await _connection.InsertAsync(motAjoute);
-                return "Element ajouté";
+                _connection.InsertAsync(motAjoute).Wait();
+                return true;
             }
             catch (Exception)
             {
-                return "Erreur lors de l'insertion";
+                return false;
             }
 
         }
 
-        public async Task<string> ModifierMot(Mot motModifie)
+        public bool ModifierMot(Mot motModifie)
         {
             try
             {
-                await _connection.UpdateAsync(motModifie);
-                return "Element ajouté";
+                _connection.UpdateAsync(motModifie).Wait();
+                return true;
             }
             catch (Exception)
             {
-                return "Erreur lors de la modification";
+                return false;
             }
         }
 
-        public async Task<string> SupprimerMot(Mot motSupprime)
+        public bool SupprimerMot(Mot motSupprime)
         {
             try
             {
-                await _connection.DeleteAsync(motSupprime);
-                return "Element supprimé";
+                _connection.DeleteAsync(motSupprime).Wait();
+                return true;
             }
             catch (Exception)
             {
-                return "Erreur lors de la suppression";
+                return false;
             }
         }
     }

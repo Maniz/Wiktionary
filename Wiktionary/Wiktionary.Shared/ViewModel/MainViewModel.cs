@@ -116,74 +116,74 @@ namespace Wiktionary.ViewModel
 
         #region Méthodes
 
-        private async void RecupererDefinitions()
+        private void RecupererDefinitions()
         {
-            IEnumerable<Mot> liste = await BaseDeDonneesPublique.Instance.RecupererDefinitions();
-            IEnumerable<Mot> listeRoaming = await BaseDeDonneesRoaming.Instance.RecupererDefinitions();
-            ListeDefinitions = new ObservableCollection<Mot>(liste.Union(await BaseDeDonneeLocale.Instance.RecupererDefinitions()).Union(listeRoaming));
+            IEnumerable<Mot> liste = BaseDeDonneesPublique.Instance.RecupererDefinitions();
+            IEnumerable<Mot> listeRoaming = BaseDeDonneesRoaming.Instance.RecupererDefinitions();
+            ListeDefinitions = new ObservableCollection<Mot>(liste.Union(BaseDeDonneeLocale.Instance.RecupererDefinitions()).Union(listeRoaming));
         }
 
         private void AjouterMot()
         {
             Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout};
-            string result = null;
+            bool result = false;
             switch (DepotAjout)
             {
                 case Depot.Local:
-                    result = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
+                    result = BaseDeDonneeLocale.Instance.AjouterMot(mot);
                     break;
                 case Depot.Roaming:
-                    result = BaseDeDonneesRoaming.Instance.AjouterMot(mot).Result;
+                    result = BaseDeDonneesRoaming.Instance.AjouterMot(mot);
                     break;
                 case Depot.Public:
-                    result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
+                    result = BaseDeDonneesPublique.Instance.AjouterMot(mot);
                     break;
             }
 
-            if(result == "Element ajouté")
+            if(result)
                 ListeDefinitions.Add(mot);
 
         }
 
         private void SupprimerMot(Mot motSupprime)
         {
-            string result = null;
+            bool result = false;
 
             switch (motSupprime.Depot)
             {
                 case Depot.Local:
-                    result = BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime).Result;
+                    result = BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime);
                     break;
                 case Depot.Roaming:
-                    result = BaseDeDonneesRoaming.Instance.SupprimerMot(motSupprime).Result;
+                    result = BaseDeDonneesRoaming.Instance.SupprimerMot(motSupprime);
                     break;
                 case Depot.Public:
-                    result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime).Result;
+                    result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime);
                     break;   
             }
 
-            if(result == "Element supprimé")
+            if(result)
                 ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == motSupprime.Word));
         }
 
         private void ModifierMot()
         {
-            string result = null;
+            bool result = false;
 
             switch (MotModifie.Depot)
             {
                 case Depot.Local:
-                    result = BaseDeDonneeLocale.Instance.ModifierMot(MotModifie).Result;
+                    result = BaseDeDonneeLocale.Instance.ModifierMot(MotModifie);
                     break;
                 case Depot.Roaming:
-                    result = BaseDeDonneesRoaming.Instance.ModifierMot(MotModifie).Result;
+                    result = BaseDeDonneesRoaming.Instance.ModifierMot(MotModifie);
                     break;
                 case Depot.Public:
-                    result = BaseDeDonneesPublique.Instance.ModifierMot(MotModifie).Result;
+                    result = BaseDeDonneesPublique.Instance.ModifierMot(MotModifie);
                     break;
             }
 
-            if (result == "Element ajouté")
+            if (result)
             {
                 ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == MotModifie.Word));
                 ListeDefinitions.Add(MotModifie);
@@ -191,7 +191,7 @@ namespace Wiktionary.ViewModel
 
         }
         
-        public IEnumerable<Depot> DepotValeurs
+        public static IEnumerable<Depot> DepotValeurs
         {
             get
             {
