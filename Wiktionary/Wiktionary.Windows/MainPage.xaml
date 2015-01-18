@@ -31,28 +31,31 @@
         </Flyout>
 
         <Flyout x:Key="EditionFlyout" Placement="Full" >
-        <StackPanel DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
-            <TextBlock Text="Edition" FontSize="32" HorizontalAlignment="Center" Foreground="White"/>
-            <TextBox Text="{Binding MotRecherche, Mode=TwoWay}"></TextBox>
-            <TextBlock Text="Définition :" FontSize="18" Foreground="White"/>
-            <TextBox Text="{Binding NouvelleDefinition}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
-            <ComboBox ItemsSource="{Binding DepotValeurs}"/>
-            <Grid>
-                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                    <Button Content="Annuler" Click="Annuler_Click"/>
-                    <Button Content="Valider"/>
-                </StackPanel>
-            </Grid>
-        </StackPanel>
-        <Flyout.FlyoutPresenterStyle>
-            <Style TargetType="FlyoutPresenter">
-                <Setter Property="Background" Value="Black"/>
-                <Setter Property="BorderBrush" Value="Gray"/>
-                <Setter Property="BorderThickness" Value="5"/>
-            </Style>
-        </Flyout.FlyoutPresenterStyle>
+            <StackPanel DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
+                <TextBlock Text="Edition" FontSize="32" HorizontalAlignment="Center" Foreground="White"/>
+                <TextBlock FontSize="20" HorizontalAlignment="Left" Foreground="White">
+                    <Run Text="Mot : " />
+			        <Run Text="{Binding MotModifie.Word}" />
+                </TextBlock>
+                <TextBlock Text="Définition :" FontSize="18" Foreground="White"/>
+                <TextBox Text="{Binding MotModifie.Definition, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
+                <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding MotModifie.Depot}" IsEnabled="False"/>
+                <Grid>
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <Button Content="Annuler" Click="Annuler_Click"/>
+                        <Button Content="Valider" Command="{Binding ModifierMotCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            <Flyout.FlyoutPresenterStyle>
+                <Style TargetType="FlyoutPresenter">
+                    <Setter Property="Background" Value="Black"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value="5"/>
+                </Style>
+            </Flyout.FlyoutPresenterStyle>
         </Flyout>
-    
+
         <DataTemplate x:Key="DefinitionTemplate">
             <Grid>
                 <Grid.RowDefinitions>
@@ -64,7 +67,7 @@
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Word}" VerticalAlignment="Top"/>
                     <Grid>
                         <StackPanel HorizontalAlignment="Center"  Orientation="Horizontal">
-                            <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click"/>
+                            <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click" Command="{Binding MainViewModel.SelectionnerMotCommand, Mode=TwoWay, Source={StaticResource Locator}}" CommandParameter="{Binding Cle}"/>
                             <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0" Command="{Binding MainViewModel.SupprimerMotCommand, Mode=TwoWay, Source={StaticResource Locator}}" CommandParameter="{Binding Cle}"/>
                         </StackPanel>
                     </Grid>

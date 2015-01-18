@@ -58,7 +58,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay}" Margin="2"/>
                 <Button Name="AjouterBouton" Content="Ajouter" Grid.Column="1" Margin="2" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Ajouter_Click"/>

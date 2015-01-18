@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -59,7 +60,18 @@ namespace Wiktionary.ViewModel
                 RaisePropertyChanged();
             }
         }
-        
+
+        private Mot _motModifie;
+
+        public Mot MotModifie
+        {
+            get { return _motModifie; }
+            set
+            {
+                _motModifie = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private ObservableCollection<Mot> _listeDefinition = new ObservableCollection<Mot>();
         public ObservableCollection<Mot> ListeDefinitions
@@ -83,6 +95,8 @@ namespace Wiktionary.ViewModel
 
         public ICommand AjouterMotCommand { get; set; }
         public ICommand SupprimerMotCommand { get; set; }
+        public ICommand ModifierMotCommand { get; set; }
+        public ICommand SelectionnerMotCommand { get; set; }
 
 
         #endregion
@@ -92,9 +106,10 @@ namespace Wiktionary.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            BaseDeDonneeLocale.Instance.InitialiserBddLocale();
-            AjouterMotCommand = new RelayCommand(AjouterMotLocal);
+            AjouterMotCommand = new RelayCommand(AjouterMot);
             SupprimerMotCommand = new RelayCommand<string>(param => SupprimerMot(new Mot() { Cle = param}));
+            ModifierMotCommand = new RelayCommand(ModifierMot);
+            SelectionnerMotCommand = new RelayCommand<string>(param => MotModifie = new Mot(){ Cle = param });
             RecupererDefinitions();
             DepotAjout = Depot.Local;
         }
@@ -104,10 +119,11 @@ namespace Wiktionary.ViewModel
         private async void RecupererDefinitions()
         {
             IEnumerable<Mot> liste = await BaseDeDonneesPublique.Instance.RecupererDefinitions();
-            ListeDefinitions = new ObservableCollection<Mot>(liste.Union(await BaseDeDonneeLocale.Instance.RecupererDefinitions()));
+            IEnumerable<Mot> listeRoaming = await BaseDeDonneesRoaming.Instance.RecupererDefinitions();
+            ListeDefinitions = new ObservableCollection<Mot>(liste.Union(await BaseDeDonneeLocale.Instance.RecupererDefinitions()).Union(listeRoaming));
         }
 
-        private async void AjouterMotLocal()
+        private void AjouterMot()
         {
             Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout};
             string result = null;
@@ -117,7 +133,7 @@ namespace Wiktionary.ViewModel
                     result = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
                     break;
                 case Depot.Roaming:
-                    //Message = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
+                    result = BaseDeDonneesRoaming.Instance.AjouterMot(mot).Result;
                     break;
                 case Depot.Public:
                     result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
@@ -129,20 +145,20 @@ namespace Wiktionary.ViewModel
 
         }
 
-        private async void SupprimerMot(Mot motSupprime)
+        private void SupprimerMot(Mot motSupprime)
         {
             string result = null;
 
             switch (motSupprime.Depot)
             {
                 case Depot.Local:
-                    result = await BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime);
+                    result = BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime).Result;
                     break;
                 case Depot.Roaming:
-                    //Message = BaseDeDonneeLocale.Instance.AjouterMot(mot).Result;
+                    result = BaseDeDonneesRoaming.Instance.SupprimerMot(motSupprime).Result;
                     break;
                 case Depot.Public:
-                    //result = BaseDeDonneesPublique.Instance.AjouterMot(mot).Result;
+                    result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime).Result;
                     break;   
             }
 
@@ -150,6 +166,31 @@ namespace Wiktionary.ViewModel
                 ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == motSupprime.Word));
         }
 
+        private void ModifierMot()
+        {
+            string result = null;
+
+            switch (MotModifie.Depot)
+            {
+                case Depot.Local:
+                    result = BaseDeDonneeLocale.Instance.ModifierMot(MotModifie).Result;
+                    break;
+                case Depot.Roaming:
+                    result = BaseDeDonneesRoaming.Instance.ModifierMot(MotModifie).Result;
+                    break;
+                case Depot.Public:
+                    result = BaseDeDonneesPublique.Instance.ModifierMot(MotModifie).Result;
+                    break;
+            }
+
+            if (result == "Element ajouté")
+            {
+                ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == MotModifie.Word));
+                ListeDefinitions.Add(MotModifie);
+            }
+
+        }
+        
         public IEnumerable<Depot> DepotValeurs
         {
             get

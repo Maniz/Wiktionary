@@ -69,9 +69,13 @@ namespace Wiktionary.Donnees
             return "fail";
         }
 
-        public Task<string> ModifierMot(Mot motModifie)
+        public async Task<string> ModifierMot(Mot motModifie)
         {
-            throw new NotImplementedException();
+            string reponse = await SupprimerMot(motModifie);
+            if (reponse == "ok")
+                return await AjouterMot(motModifie);
+
+            return "Echec";
         }
     }
 }

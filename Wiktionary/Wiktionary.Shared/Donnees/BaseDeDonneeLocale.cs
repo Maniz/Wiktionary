@@ -15,6 +15,7 @@ namespace Wiktionary.Donnees
         private BaseDeDonneeLocale()
         {
             _connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+            InitialiserBddLocale();
         }
 
         public static BaseDeDonneeLocale Instance
@@ -24,7 +25,7 @@ namespace Wiktionary.Donnees
 
         private readonly SQLiteAsyncConnection _connection;
 
-        public async void InitialiserBddLocale()
+        private async void InitialiserBddLocale()
         {
             //await _connection.DropTableAsync<Mot>();
             await _connection.CreateTableAsync<Mot>();
@@ -68,7 +69,7 @@ namespace Wiktionary.Donnees
             try
             {
                 await _connection.UpdateAsync(motModifie);
-                return "Element modifié";
+                return "Element ajouté";
             }
             catch (Exception)
             {

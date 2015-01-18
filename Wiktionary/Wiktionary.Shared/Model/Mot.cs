@@ -1,4 +1,5 @@
-﻿using SQLite;
+﻿using Newtonsoft.Json;
+using SQLite;
 using Wiktionary.ViewModel;
 
 namespace Wiktionary.Model
@@ -8,19 +9,20 @@ namespace Wiktionary.Model
     /// </summary>
     public class Mot
     {
-        [PrimaryKey, Column("word"), NotNull]
-        public string Word { get; set; }
         [Column("definition"), NotNull]
         public string Definition { get; set; }
-
+        [PrimaryKey, Column("word"), NotNull]
+        public string Word { get; set; }
+        [JsonIgnore]
         public MainViewModel.Depot Depot { get; set; }
+        [JsonIgnore]
         private string _cle;
-
+        [JsonIgnore]
         public string Cle
         {
             get
             {
-                return Word + "-" + Depot;
+                return Word + "-" + Definition + "-" + Depot;
             }
             set
             {
@@ -28,11 +30,12 @@ namespace Wiktionary.Model
                 if (value == null) return;
                 string[] words = value.Split('-');
                 Word = words[0];
-                if (words[1] == MainViewModel.Depot.Local.ToString())
+                Definition = words[1];
+                if (words[2] == MainViewModel.Depot.Local.ToString())
                     Depot = MainViewModel.Depot.Local;
-                else if (words[1] == MainViewModel.Depot.Roaming.ToString())
+                else if (words[2] == MainViewModel.Depot.Roaming.ToString())
                     Depot = MainViewModel.Depot.Roaming;
-                else if (words[1] == MainViewModel.Depot.Public.ToString())
+                else if (words[2] == MainViewModel.Depot.Public.ToString())
                     Depot = MainViewModel.Depot.Public;
             }
         }
