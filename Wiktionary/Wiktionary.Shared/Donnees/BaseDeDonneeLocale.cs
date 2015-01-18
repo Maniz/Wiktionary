@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using SQLite;
 using Wiktionary.Model;
@@ -54,13 +55,23 @@ namespace Wiktionary.Donnees
         {
             try
             {
-                _connection.InsertAsync(motAjoute).Wait();
-                return true;
+                if (_connection.Table<Mot>().ToListAsync().Result.All(mot => mot.Word != motAjoute.Word))
+                {
+                    _connection.InsertAsync(motAjoute).Wait();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (SQLiteException ex)
+            {
+                return false;
             }
             catch (Exception)
             {
                 return false;
             }
+
 
         }
 
