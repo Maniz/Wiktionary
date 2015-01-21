@@ -61,11 +61,11 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel>
+                <StackPanel Margin="5">
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Word}" FontSize="18" FontWeight="Bold"/>
                     <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Definition}" VerticalAlignment="Top"/>
                     <Grid>
-                        <StackPanel HorizontalAlignment="Center"  Orientation="Horizontal">
+                        <StackPanel HorizontalAlignment="Left"  Orientation="Horizontal">
                             <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click"/>
                             <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0" Command="{Binding MainViewModel.SupprimerMotCommand, Mode=TwoWay, Source={StaticResource Locator}}" CommandParameter="{Binding Cle}"/>
                         </StackPanel>
@@ -79,7 +79,7 @@
     <Grid Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
             <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
-            <StackPanel Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
                 <TextBox Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Button Name="AjouterBouton" Content="Ajouter une nouvelle définition" FlyoutBase.AttachedFlyout="{StaticResource AjoutFlyout}" Click="Ajouter_Click"/>
             </StackPanel>
