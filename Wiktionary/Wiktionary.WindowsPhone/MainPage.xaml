@@ -88,17 +88,17 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
-                <Button Name="AjouterBouton" Content="Ajouter" Grid.Column="1" Margin="2" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Ajouter_Click"/>
-            </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
+            <Button Name="AjouterBouton" Content="Ajouter" Grid.Column="1" Margin="2" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Ajouter_Click"/>
+        </Grid>
         <ListView Grid.Row="2" Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
