@@ -24,14 +24,17 @@
 #endif
 
 using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
-
+using Windows.Storage;
 #if USE_CSHARP_SQLITE
 using Sqlite3 = Community.CsharpSqlite.Sqlite3;
 using Sqlite3DatabaseHandle = Community.CsharpSqlite.Sqlite3.sqlite3;
@@ -129,7 +132,7 @@ namespace SQLite
 		private TimeSpan _busyTimeout;
 		private Dictionary<string, TableMapping> _mappings = null;
 		private Dictionary<string, TableMapping> _tables = null;
-		private System.Diagnostics.Stopwatch _sw;
+		private Stopwatch _sw;
 		private long _elapsedMilliseconds = 0;
 
 		private int _transactionDepth = 0;
@@ -183,7 +186,7 @@ namespace SQLite
 			DatabasePath = databasePath;
 
 #if NETFX_CORE
-			SQLite3.SetDirectory(/*temp directory type*/2, Windows.Storage.ApplicationData.Current.TemporaryFolder.Path);
+			SQLite3.SetDirectory(/*temp directory type*/2, ApplicationData.Current.TemporaryFolder.Path);
 #endif
 
 			Sqlite3DatabaseHandle handle;
@@ -228,9 +231,9 @@ namespace SQLite
 
 		static byte[] GetNullTerminatedUtf8 (string s)
 		{
-			var utf8Length = System.Text.Encoding.UTF8.GetByteCount (s);
+			var utf8Length = Encoding.UTF8.GetByteCount (s);
 			var bytes = new byte [utf8Length + 1];
-			utf8Length = System.Text.Encoding.UTF8.GetBytes(s, 0, s.Length, bytes, 0);
+			utf8Length = Encoding.UTF8.GetBytes(s, 0, s.Length, bytes, 0);
 			return bytes;
 		}
 		
@@ -1052,7 +1055,7 @@ namespace SQLite
 		/// <returns>
 		/// The number of rows added to the table.
 		/// </returns>
-		public int InsertAll (System.Collections.IEnumerable objects)
+		public int InsertAll (IEnumerable objects)
 		{
 			var c = 0;
 			RunInTransaction(() => {
@@ -1075,7 +1078,7 @@ namespace SQLite
 		/// <returns>
 		/// The number of rows added to the table.
 		/// </returns>
-		public int InsertAll (System.Collections.IEnumerable objects, string extra)
+		public int InsertAll (IEnumerable objects, string extra)
 		{
 			var c = 0;
 			RunInTransaction (() => {
@@ -1098,7 +1101,7 @@ namespace SQLite
 		/// <returns>
 		/// The number of rows added to the table.
 		/// </returns>
-		public int InsertAll (System.Collections.IEnumerable objects, Type objType)
+		public int InsertAll (IEnumerable objects, Type objType)
 		{
 			var c = 0;
 			RunInTransaction (() => {
@@ -1379,7 +1382,7 @@ namespace SQLite
 		/// <returns>
 		/// The number of rows modified.
 		/// </returns>
-		public int UpdateAll (System.Collections.IEnumerable objects)
+		public int UpdateAll (IEnumerable objects)
 		{
 			var c = 0;
 			RunInTransaction (() => {
@@ -1500,7 +1503,7 @@ namespace SQLite
 		public bool StoreDateTimeAsTicks { get; private set; }
 
 #if NETFX_CORE
-		static readonly string MetroStyleDataPath = Windows.Storage.ApplicationData.Current.LocalFolder.Path;
+		static readonly string MetroStyleDataPath = ApplicationData.Current.LocalFolder.Path;
 #endif
 
 		public SQLiteConnectionString (string databasePath, bool storeDateTimeAsTicks)
@@ -1509,7 +1512,7 @@ namespace SQLite
 			StoreDateTimeAsTicks = storeDateTimeAsTicks;
 
 #if NETFX_CORE
-			DatabasePath = System.IO.Path.Combine (MetroStyleDataPath, databasePath);
+			DatabasePath = Path.Combine (MetroStyleDataPath, databasePath);
 #else
 			DatabasePath = databasePath;
 #endif
@@ -1628,7 +1631,7 @@ namespace SQLite
 			MappedType = type;
 
 #if NETFX_CORE
-			var tableAttr = (TableAttribute)System.Reflection.CustomAttributeExtensions
+			var tableAttr = (TableAttribute)CustomAttributeExtensions
                 .GetCustomAttribute(type.GetTypeInfo(), typeof(TableAttribute), true);
 #else
 			var tableAttr = (TableAttribute)type.GetCustomAttributes (typeof (TableAttribute), true).FirstOrDefault ();
@@ -2708,11 +2711,11 @@ namespace SQLite
 					//
 					// Work special magic for enumerables
 					//
-					if (val != null && val is System.Collections.IEnumerable && !(val is string) && !(val is System.Collections.Generic.IEnumerable<byte>)) {
-						var sb = new System.Text.StringBuilder();
+					if (val != null && val is IEnumerable && !(val is string) && !(val is IEnumerable<byte>)) {
+						var sb = new StringBuilder();
 						sb.Append("(");
 						var head = "";
-						foreach (var a in (System.Collections.IEnumerable)val) {
+						foreach (var a in (IEnumerable)val) {
 							queryArgs.Add(a);
 							sb.Append(head);
 							sb.Append("?");
@@ -2807,7 +2810,7 @@ namespace SQLite
 			return GenerateCommand("*").ExecuteDeferredQuery<T>().GetEnumerator();
 		}
 
-		System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator ()
+		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return GetEnumerator ();
 		}
@@ -2968,7 +2971,7 @@ namespace SQLite
 		{
 			IntPtr stmt;
 #if NETFX_CORE
-            byte[] queryBytes = System.Text.UTF8Encoding.UTF8.GetBytes (query);
+            byte[] queryBytes = UTF8Encoding.UTF8.GetBytes (query);
             var r = Prepare2 (db, queryBytes, queryBytes.Length, out stmt, IntPtr.Zero);
 #else
             var r = Prepare2 (db, query, System.Text.UTF8Encoding.UTF8.GetByteCount (query), out stmt, IntPtr.Zero);
@@ -3059,7 +3062,7 @@ namespace SQLite
 
 		public static string ColumnString (IntPtr stmt, int index)
 		{
-			return Marshal.PtrToStringUni (SQLite3.ColumnText16 (stmt, index));
+			return Marshal.PtrToStringUni (ColumnText16 (stmt, index));
 		}
 
 		public static byte[] ColumnByteArray (IntPtr stmt, int index)

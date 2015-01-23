@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using Windows.Storage;
-using Windows.Storage.Streams;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Wiktionary.Model;
 using Wiktionary.ViewModel;
 

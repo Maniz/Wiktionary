@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -17,7 +15,7 @@ namespace Wiktionary.ViewModel
     {
 
         #region Propriétés
-        
+
         public enum Depot
         {
             Local,
@@ -51,8 +49,21 @@ namespace Wiktionary.ViewModel
             }
         }
 
+        private Depot _depotRecherche;
+
+        public Depot DepotRecherche
+        {
+            get { return _depotRecherche; }
+            set
+            {
+                _depotRecherche = value;
+                RechargeList();
+                RaisePropertyChanged();
+            }
+        }
+
         private string _nouvelleDefinition;
-                
+
         public string NouvelleDefinition
         {
             get { return _nouvelleDefinition; }
@@ -62,7 +73,7 @@ namespace Wiktionary.ViewModel
                 RaisePropertyChanged();
             }
         }
-        
+
         private Mot _motModifie;
 
         public Mot MotModifie
@@ -91,7 +102,12 @@ namespace Wiktionary.ViewModel
 
         private void RechargeList()
         {
-            ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower())));
+            if (DepotRecherche == Depot.Tous)
+                ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower())));
+            else
+                ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower()) && m.Depot == DepotRecherche));
+
+
         }
 
         #endregion
@@ -113,14 +129,15 @@ namespace Wiktionary.ViewModel
         public MainViewModel()
         {
             Notification.AbonnementNotification();
-
-            BaseDeDonneeLocale.Instance.InitialiserBddLocale();
-            AjouterMotCommand = new RelayCommand(AjouterMotLocal);
-            SupprimerMotCommand = new RelayCommand<string>(param => SupprimerMot(new Mot() { Cle = param}));
+            AjouterMotCommand = new RelayCommand(AjouterMot);
+            SupprimerMotCommand = new RelayCommand<string>(param => SupprimerMot(new Mot() { Cle = param }));
             ModifierMotCommand = new RelayCommand(ModifierMot);
-            SelectionnerMotCommand = new RelayCommand<string>(param => MotModifie = new Mot(){ Cle = param });
+            SelectionnerMotCommand = new RelayCommand<string>(param => MotModifie = new Mot() { Cle = param });
             RecupererDefinitions();
             DepotAjout = Depot.Local;
+            MotRecherche = "";
+            DepotRecherche = Depot.Tous;
+            
         }
 
         #region Méthodes
@@ -135,7 +152,7 @@ namespace Wiktionary.ViewModel
 
         private void AjouterMot()
         {
-            Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout};
+            Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout };
             bool result = false;
             switch (DepotAjout)
             {
@@ -153,34 +170,11 @@ namespace Wiktionary.ViewModel
                     break;
             }
 
-            if(result)
+            if (result)
+            {
                 ListeDefinitions.Add(mot);
-        }
-
-        private void EditerMotLocal()
-        {
-            
-            string result = null;
-            switch (DepotAjout)
-            {
-                case Depot.Local:
-                    
-                    break;
-                case Depot.Roaming:
-                    
-                    break;
-                case Depot.Public:
-                    
-                    break;
-                case Depot.Tous:
-
-                    break;
+                RechargeList();
             }
-
-            if (result == "Element édité")
-            {
-
-        }
         }
 
         private void SupprimerMot(Mot motSupprime)
@@ -197,13 +191,16 @@ namespace Wiktionary.ViewModel
                     break;
                 case Depot.Public:
                     result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime);
-                    break;   
+                    break;
                 case Depot.Tous:
                     break;
             }
 
-            if(result)
-                ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == motSupprime.Word));
+            if (result)
+            {
+                ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == motSupprime.Word && mot.Depot == motSupprime.Depot));
+                RechargeList();
+            }
         }
 
         private void ModifierMot()
@@ -225,12 +222,13 @@ namespace Wiktionary.ViewModel
 
             if (result)
             {
-                ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == MotModifie.Word));
+                ListeDefinitions.Remove(ListeDefinitions.Single(mot => mot.Word == MotModifie.Word && mot.Depot == MotModifie.Depot));
                 ListeDefinitions.Add(MotModifie);
+                RechargeList();
             }
 
         }
-        
+
         public static IEnumerable<Depot> DepotValeurs
         {
             get
