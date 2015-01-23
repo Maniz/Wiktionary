@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -45,16 +46,14 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(
-                "http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word +"/" + motAjoute.Definition + "/anthopaul")).Result;
+            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(WebUtility.UrlEncode("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul"))).Result;
 
             return response.IsSuccessStatusCode;
         }
 
         public bool SupprimerMot(Mot motSupprime)
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(
-               "http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
+            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(WebUtility.UrlEncode("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"))).Result;
 
             return response.IsSuccessStatusCode;
         }
