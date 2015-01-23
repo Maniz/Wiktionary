@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Wiktionary.Model;
@@ -14,23 +13,20 @@ namespace Wiktionary.Donnees
 
         private static BaseDeDonneesPublique _instance;
 
-        private BaseDeDonneesPublique()
-        {
-            
-        }
+        private BaseDeDonneesPublique(){}
 
         public static BaseDeDonneesPublique Instance
         {
             get { return _instance ?? (_instance = new BaseDeDonneesPublique()); }
         }
 
-        public async Task<ObservableCollection<Mot>> RecupererDefinitions()
+        public ObservableCollection<Mot> RecupererDefinitions()
         {
-            HttpResponseMessage response = await new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions"));
+            HttpResponseMessage response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions")).Result;
 
             if (response.IsSuccessStatusCode)
             {
-                string json = await response.Content.ReadAsStringAsync();
+                string json = response.Content.ReadAsStringAsync().Result;
                 var data = JArray.Parse(json);
 
                 ObservableCollection<Mot> listeDefinitionsPubliques = new ObservableCollection<Mot>();
@@ -47,31 +43,25 @@ namespace Wiktionary.Donnees
             return new ObservableCollection<Mot>();
         }
 
-        public async Task<string> AjouterMot(Mot motAjoute)
+        public bool AjouterMot(Mot motAjoute)
         {
-            HttpResponseMessage response = await new HttpClient().GetAsync(new Uri(
-                "http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word +"/" + motAjoute.Definition + "/anthopaul"));
+            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(
+                "http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word +"/" + motAjoute.Definition + "/anthopaul")).Result;
 
-            if(response.IsSuccessStatusCode)
-                return "ok";
-
-            return "fail";
+            return response.IsSuccessStatusCode;
         }
 
-        public async Task<string> SupprimerMot(Mot motSupprime)
+        public bool SupprimerMot(Mot motSupprime)
         {
-            HttpResponseMessage response = await new HttpClient().GetAsync(new Uri(
-               "http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"));
+            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(
+               "http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
 
-            if(response.IsSuccessStatusCode)
-                return "ok";
-
-            return "fail";
+            return response.IsSuccessStatusCode;
         }
 
-        public Task<string> ModifierMot(Mot motModifie)
+        public bool ModifierMot(Mot motModifie)
         {
-            throw new NotImplementedException();
+            return SupprimerMot(motModifie) && AjouterMot(motModifie);
         }
     }
 }

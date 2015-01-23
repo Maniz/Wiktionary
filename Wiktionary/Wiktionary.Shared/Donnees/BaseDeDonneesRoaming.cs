@@ -1,32 +1,110 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using Windows.Storage;
+using Newtonsoft.Json;
 using Wiktionary.Model;
+using Wiktionary.ViewModel;
 
 namespace Wiktionary.Donnees
 {
     public class BaseDeDonneesRoaming : IBaseDeDonnees
     {
-        public Task<ObservableCollection<Mot>> RecupererDefinitions()
+        private static BaseDeDonneesRoaming _instance;
+        private readonly StorageFolder _dossierRoamingWikitionary;
+
+        private BaseDeDonneesRoaming()
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dossierRoamingWikitionary = ApplicationData.Current.RoamingFolder.GetFolderAsync("Wikitionary").AsTask().Result;
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    _dossierRoamingWikitionary = ApplicationData.Current.RoamingFolder.CreateFolderAsync("Wikitionary").AsTask().Result;
+                }
+                catch(Exception)
+                {
+                    return;
+                }
+            }
         }
 
-        public Task<string> AjouterMot(Mot motAjoute)
+        public static BaseDeDonneesRoaming Instance
         {
-            throw new NotImplementedException();
+            get { return _instance ?? (_instance = new BaseDeDonneesRoaming()); }
         }
 
-        public Task<string> ModifierMot(Mot motModifie)
+        public ObservableCollection<Mot> RecupererDefinitions()
         {
-            throw new NotImplementedException();
+            ObservableCollection<Mot> listeDefinitionsPubliques = new ObservableCollection<Mot>();
+            List<StorageFile> listeFichiersRoaming = new List<StorageFile>(_dossierRoamingWikitionary.GetFilesAsync().AsTask().Result);
+
+            foreach (var fichierRoaming in listeFichiersRoaming)
+            {
+                string json = FileIO.ReadTextAsync(fichierRoaming).AsTask().Result;
+                var mot = JsonConvert.DeserializeObject<Mot>(json);
+                mot.Depot = MainViewModel.Depot.Roaming;
+                listeDefinitionsPubliques.Add(mot);
+            }
+
+            return listeDefinitionsPubliques;
         }
 
-        public Task<string> SupprimerMot(Mot motSupprime)
+        public bool AjouterMot(Mot motAjoute)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var fichierRoaming = _dossierRoamingWikitionary.CreateFileAsync(motAjoute.Word + ".json", CreationCollisionOption.FailIfExists).AsTask().Result;
+
+                using (var fichier = fichierRoaming.OpenAsync(FileAccessMode.ReadWrite).AsTask().Result)
+                using (StreamWriter writer = new StreamWriter(fichier.AsStream()))
+                using (JsonWriter jsonTextWriter = new JsonTextWriter(writer))
+                {
+                    jsonTextWriter.Formatting = Formatting.Indented;
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.Serialize(jsonTextWriter, motAjoute);
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public bool ModifierMot(Mot motModifie)
+        {
+            try
+            {
+                var fichierModifie = _dossierRoamingWikitionary.GetFileAsync(motModifie.Word + ".json").AsTask().Result;
+                fichierModifie.DeleteAsync().AsTask().Wait();
+                return AjouterMot(motModifie);
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
+
+        }
+
+        public bool SupprimerMot(Mot motSupprime)
+        {
+            try
+            {
+                var fichierSupprime = _dossierRoamingWikitionary.GetFileAsync(motSupprime.Word + ".json").AsTask().Result;
+                fichierSupprime.DeleteAsync().AsTask().Wait();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
