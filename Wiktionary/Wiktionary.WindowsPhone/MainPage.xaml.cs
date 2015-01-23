@@ -55,7 +55,14 @@ namespace Wiktionary
             FlyoutBase.ShowAttachedFlyout((FrameworkElement)sender); 
         }
 
-        private void Annuler_Click(object sender, RoutedEventArgs e)
+        private void Ajouter_Click_Flyout(object sender, RoutedEventArgs e)
+        {
+            var flyout = FlyoutBase.GetAttachedFlyout(AjouterBouton) ?? FlyoutBase.GetAttachedFlyout(ListeDefinition.FindName("ModifierBouton") as Button);
+
+            if (flyout != null) flyout.Hide();
+        }
+
+        private void Annuler_Click_Flyout(object sender, RoutedEventArgs e)
         {
             var flyout = FlyoutBase.GetAttachedFlyout(AjouterBouton) ?? FlyoutBase.GetAttachedFlyout(ListeDefinition.FindName("ModifierBouton") as Button);
 
