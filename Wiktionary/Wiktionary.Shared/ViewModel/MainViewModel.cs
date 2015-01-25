@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -105,6 +106,9 @@ namespace Wiktionary.ViewModel
 
         private void RechargeList()
         {
+            if (ListeDefinitions == null)
+                ListeDefinitions = new ObservableCollection<Mot>();
+
             if (DepotRecherche == Depot.Tous)
                 ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower())));
             else
@@ -140,7 +144,8 @@ namespace Wiktionary.ViewModel
             DepotAjout = Depot.Local;
             MotRecherche = "";
             DepotRecherche = Depot.Tous;
-            
+
+            Notification.GlobalPropertyChanged += ToastHandling;
         }
 
         #region Méthodes
@@ -266,6 +271,11 @@ namespace Wiktionary.ViewModel
             {
                 return Enum.GetValues(typeof(Depot)).Cast<Depot>();
             }
+        }
+
+        private void ToastHandling(object sender, PropertyChangedEventArgs e)
+        {
+            MotRecherche = Notification.Mot;
         }
         #endregion
 

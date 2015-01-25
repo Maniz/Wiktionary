@@ -25,6 +25,8 @@ namespace Wiktionary
         public MainPage()
         {
             this.InitializeComponent();
+            if (!String.IsNullOrEmpty(Notification.Mot))
+                MotRecherche.Text = Notification.Mot;
         }
 
         private void Ajouter_Click(object sender, RoutedEventArgs e)
@@ -49,12 +51,6 @@ namespace Wiktionary
             var flyout = FlyoutBase.GetAttachedFlyout(AjouterBouton) ?? FlyoutBase.GetAttachedFlyout(ListeDefinition.FindName("ModifierBouton") as Button);
 
             if (flyout != null) flyout.Hide();
-        }
-
-        private void ToastHandling(ListViewBase sender, ContainerContentChangingEventArgs args)
-        {
-            if (!String.IsNullOrEmpty(Notification.Mot))
-                MotRecherche.Text = Notification.Mot;
         }
     }
 }
