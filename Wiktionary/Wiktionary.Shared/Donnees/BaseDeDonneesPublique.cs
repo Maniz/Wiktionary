@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
+using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,22 +24,29 @@ namespace Wiktionary.Donnees
 
         public ObservableCollection<Mot> RecupererDefinitions()
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions")).Result;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                string json = response.Content.ReadAsStringAsync().Result;
-                var data = JArray.Parse(json);
+                HttpResponseMessage response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions")).Result;
 
-                ObservableCollection<Mot> listeDefinitionsPubliques = new ObservableCollection<Mot>();
-                foreach (var mot in data)
+                if (response.IsSuccessStatusCode)
                 {
-                    Mot m = JsonConvert.DeserializeObject<Mot>(mot.ToString());
-                    m.Depot = MainViewModel.Depot.Public;
-                    listeDefinitionsPubliques.Add(m);
-                }
+                    string json = response.Content.ReadAsStringAsync().Result;
+                    var data = JArray.Parse(json);
 
-                return listeDefinitionsPubliques;
+                    ObservableCollection<Mot> listeDefinitionsPubliques = new ObservableCollection<Mot>();
+                    foreach (var mot in data)
+                    {
+                        Mot m = JsonConvert.DeserializeObject<Mot>(mot.ToString());
+                        m.Depot = MainViewModel.Depot.Public;
+                        listeDefinitionsPubliques.Add(m);
+                    }
+
+                    return listeDefinitionsPubliques;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
             }
 
             return new ObservableCollection<Mot>();
@@ -45,16 +54,38 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(
-                "http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word +"/" + motAjoute.Definition + "/anthopaul")).Result;
+            HttpResponseMessage response;
+            try
+            {
+                response = new HttpClient().GetAsync(new Uri(
+                    "http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul")).Result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
+            }
+
+            if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+                throw new Exception("Vous n'êtes pas autorisé à éditer cette définition.");
 
             return response.IsSuccessStatusCode;
         }
 
         public bool SupprimerMot(Mot motSupprime)
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(
-               "http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
+            HttpResponseMessage response;
+            try
+            {
+                response = new HttpClient().GetAsync(new Uri(
+                    "http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
+            }
+
+            if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+                throw new Exception("Vous n'êtes pas autorisé à éditer cette définition.");
 
             return response.IsSuccessStatusCode;
         }

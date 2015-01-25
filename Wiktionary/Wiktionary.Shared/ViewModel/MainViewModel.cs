@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
+using Windows.UI.Popups;
+using Windows.UI.Xaml;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using Wiktionary.Donnees;
@@ -144,30 +147,46 @@ namespace Wiktionary.ViewModel
 
         private void RecupererDefinitions()
         {
-            IEnumerable<Mot> liste = BaseDeDonneesPublique.Instance.RecupererDefinitions();
-            IEnumerable<Mot> listeRoaming = BaseDeDonneesRoaming.Instance.RecupererDefinitions();
-            ListeDefinitions = new ObservableCollection<Mot>(liste.Union(BaseDeDonneeLocale.Instance.RecupererDefinitions()).Union(listeRoaming));
-            ListeDefinitionsFiltree = ListeDefinitions;
+            try
+            {
+                IEnumerable<Mot> liste = BaseDeDonneesPublique.Instance.RecupererDefinitions();
+                IEnumerable<Mot> listeRoaming = BaseDeDonneesRoaming.Instance.RecupererDefinitions();
+                ListeDefinitions =
+                    new ObservableCollection<Mot>(
+                        liste.Union(BaseDeDonneeLocale.Instance.RecupererDefinitions()).Union(listeRoaming));
+                ListeDefinitionsFiltree = ListeDefinitions;
+            }
+            catch (Exception e)
+            {
+                new MessageDialog(e.Message).ShowAsync();
+            }
         }
 
         private void AjouterMot()
         {
             Mot mot = new Mot() { Word = MotRecherche, Definition = NouvelleDefinition, Depot = DepotAjout };
             bool result = false;
-            switch (DepotAjout)
+            try
             {
-                case Depot.Local:
-                    result = BaseDeDonneeLocale.Instance.AjouterMot(mot);
-                    break;
-                case Depot.Roaming:
-                    result = BaseDeDonneesRoaming.Instance.AjouterMot(mot);
-                    break;
-                case Depot.Public:
-                    result = BaseDeDonneesPublique.Instance.AjouterMot(mot);
-                    break;
-                case Depot.Tous:
+                switch (DepotAjout)
+                {
+                    case Depot.Local:
+                        result = BaseDeDonneeLocale.Instance.AjouterMot(mot);
+                        break;
+                    case Depot.Roaming:
+                        result = BaseDeDonneesRoaming.Instance.AjouterMot(mot);
+                        break;
+                    case Depot.Public:
+                        result = BaseDeDonneesPublique.Instance.AjouterMot(mot);
+                        break;
+                    case Depot.Tous:
 
-                    break;
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                new MessageDialog(e.Message).ShowAsync();
             }
 
             if (result)
@@ -180,20 +199,26 @@ namespace Wiktionary.ViewModel
         private void SupprimerMot(Mot motSupprime)
         {
             bool result = false;
-
-            switch (motSupprime.Depot)
+            try
             {
-                case Depot.Local:
-                    result = BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime);
-                    break;
-                case Depot.Roaming:
-                    result = BaseDeDonneesRoaming.Instance.SupprimerMot(motSupprime);
-                    break;
-                case Depot.Public:
-                    result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime);
-                    break;
-                case Depot.Tous:
-                    break;
+                switch (motSupprime.Depot)
+                {
+                    case Depot.Local:
+                        result = BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime);
+                        break;
+                    case Depot.Roaming:
+                        result = BaseDeDonneesRoaming.Instance.SupprimerMot(motSupprime);
+                        break;
+                    case Depot.Public:
+                        result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime);
+                        break;
+                    case Depot.Tous:
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                new MessageDialog(e.Message).ShowAsync();
             }
 
             if (result)
@@ -207,17 +232,23 @@ namespace Wiktionary.ViewModel
         {
             bool result = false;
 
-            switch (MotModifie.Depot)
+            try {
+                switch (MotModifie.Depot)
+                {
+                    case Depot.Local:
+                        result = BaseDeDonneeLocale.Instance.ModifierMot(MotModifie);
+                        break;
+                    case Depot.Roaming:
+                        result = BaseDeDonneesRoaming.Instance.ModifierMot(MotModifie);
+                        break;
+                    case Depot.Public:
+                        result = BaseDeDonneesPublique.Instance.ModifierMot(MotModifie);
+                        break;
+                }
+            }
+            catch (Exception e)
             {
-                case Depot.Local:
-                    result = BaseDeDonneeLocale.Instance.ModifierMot(MotModifie);
-                    break;
-                case Depot.Roaming:
-                    result = BaseDeDonneesRoaming.Instance.ModifierMot(MotModifie);
-                    break;
-                case Depot.Public:
-                    result = BaseDeDonneesPublique.Instance.ModifierMot(MotModifie);
-                    break;
+                new MessageDialog(e.Message).ShowAsync();
             }
 
             if (result)
