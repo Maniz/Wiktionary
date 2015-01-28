@@ -2,7 +2,6 @@
     x:Class="Wiktionary.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Wiktionary"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -39,7 +38,7 @@
 			        <Run Text="{Binding MotModifie.Word}" />
                 </TextBlock>
                 <TextBlock Text="Définition :" FontSize="18" Foreground="White"/>
-                <TextBox Text="{Binding MotModifie.Definition, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
+                <TextBox Text="{Binding MotModifie.Definition, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" AcceptsReturn="True" Height="128"/>
                 <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding MotModifie.Depot}" IsEnabled="False"/>
                 <Grid>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">

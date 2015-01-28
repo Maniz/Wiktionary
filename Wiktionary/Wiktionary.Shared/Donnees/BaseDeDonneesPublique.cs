@@ -46,16 +46,30 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(WebUtility.UrlEncode("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul"))).Result;
-
-            return response.IsSuccessStatusCode;
+            try
+            {
+                HttpResponseMessage response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul"))).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
 
         public bool SupprimerMot(Mot motSupprime)
         {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri(WebUtility.UrlEncode("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"))).Result;
-
-            return response.IsSuccessStatusCode;
+            try
+            {
+                HttpResponseMessage response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"))).Result;
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
 
         public bool ModifierMot(Mot motModifie)

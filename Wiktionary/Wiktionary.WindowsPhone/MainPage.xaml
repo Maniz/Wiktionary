@@ -37,14 +37,17 @@
             <StackPanel DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
                 <TextBlock Text="Edition " FontSize="32" HorizontalAlignment="Center"/>
                 <TextBlock Text="Mot :" FontSize="18" Foreground="White"/>
-                <TextBox Text="{Binding MotRecherche, Mode=TwoWay}"/>
+                <TextBlock>
+			        <Run Text="Mot : " />
+			        <Run Text="{Binding MotModifie.Word}" />
+                </TextBlock>
                 <TextBlock Text="Définition :" FontSize="18"/>
-                <TextBox Text="{Binding NouvelleDefinition, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" Height="128"/>
-                <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotAjout, Mode=TwoWay}"/>
+                <TextBox Text="{Binding MotModifie.Definition, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" TextWrapping="Wrap" Height="128"/>
+                <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding MotModifie.Depot}" IsEnabled="False"/>
                 <Grid>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                         <Button Content="Annuler" Click="Annuler_Click_Flyout"/>
-                        <Button Content="Valider" Click="Ajouter_Click_Flyout" Command="{Binding EditerMotCommand}"/>
+                        <Button Content="Valider" Click="Ajouter_Click_Flyout" Command="{Binding ModifierMotCommand}"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -70,12 +73,16 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Word}" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="18" FontWeight="Bold">
+			            <Run Text="{Binding Word}"></Run>
+			            <Run Text=" - "></Run>
+                        <Run Text="{Binding Depot}"></Run>
+                    </TextBlock>
                     <TextBlock Grid.Row="1" HorizontalAlignment="Left" TextWrapping="Wrap" Text="{Binding Definition}" VerticalAlignment="Top"/>
                     <Grid Grid.Row="2">
                         <StackPanel HorizontalAlignment="Center"  Orientation="Horizontal">
-                            <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click"/>
-                            <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0"/>
+                            <HyperlinkButton Name="ModifierBouton" Content="Modifier" FontSize="16" Foreground="#FF47CDFF" Margin="0, 0, 5, 0" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Modifier_Click" Command="{Binding MainViewModel.SelectionnerMotCommand, Mode=TwoWay, Source={StaticResource Locator}}" CommandParameter="{Binding Cle}"/>
+                            <HyperlinkButton Content="Supprimer" FontSize="16" Foreground="#FF47CDFF" Margin="5, 0, 0, 0"  Command="{Binding MainViewModel.SupprimerMotCommand, Mode=TwoWay, Source={StaticResource Locator}}" CommandParameter="{Binding Cle}"/>
                         </StackPanel>
                     </Grid>
                     <Line Grid.Row="3" StrokeThickness="2" Fill="White" />
@@ -91,15 +98,17 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
-                <Button Name="AjouterBouton" Content="Ajouter" Grid.Column="1" Margin="2" FlyoutBase.AttachedFlyout="{StaticResource EditionFlyout}" Click="Ajouter_Click"/>
-            </Grid>
-        <ListView Grid.Row="2" Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}">
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ComboBox Width="125" ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotRecherche, Mode=TwoWay}"></ComboBox>
+            <TextBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
+            <Button Name="AjouterBouton" Content="Ajouter" Grid.Column="2" Margin="2" FlyoutBase.AttachedFlyout="{StaticResource AjoutFlyout}" Click="Ajouter_Click"/>
+        </Grid>
+        <ListView Grid.Row="2" Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}" Margin="0,0.167,0,2175.333">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
