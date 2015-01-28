@@ -25,6 +25,8 @@ namespace Wiktionary
         public MainPage()
         {
             this.InitializeComponent();
+            if (!String.IsNullOrEmpty(Notification.Mot))
+                MotRecherche.Text = Notification.Mot;
         }
 
         private void Ajouter_Click(object sender, RoutedEventArgs e)

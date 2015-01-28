@@ -82,14 +82,14 @@
     </Page.Resources>
 
     <Grid Name="MainGrid" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" DataContext="{Binding MainViewModel, Mode=TwoWay, Source={StaticResource Locator}}">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
-            <StackPanel HorizontalAlignment="Left" Orientation="Horizontal">
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <ComboBox Margin="0,0,10,0" Width="125" ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotRecherche, Mode=TwoWay}"></ComboBox>
-                <TextBox Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox  Name="MotRecherche" Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Button Name="AjouterBouton" Content="Ajouter une nouvelle définition" FlyoutBase.AttachedFlyout="{StaticResource AjoutFlyout}" Click="Ajouter_Click"/>
             </StackPanel>
-            <ListView Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}" Height="979">
+            <ListView HorizontalAlignment="Left" Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}" Height="979">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

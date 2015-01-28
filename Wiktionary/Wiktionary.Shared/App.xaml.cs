@@ -94,6 +94,11 @@ namespace Wiktionary
 
             // Vérifiez que la fenêtre actuelle est active
             Window.Current.Activate();
+
+            //Récupération du mot des notification Toast
+            string mot = e.Arguments;
+            if (!String.IsNullOrEmpty(mot))
+                Notification.Mot = mot;
         }
 
 #if WINDOWS_PHONE_APP

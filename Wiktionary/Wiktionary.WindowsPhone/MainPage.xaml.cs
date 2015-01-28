@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml;
+﻿using System;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Navigation;
@@ -17,6 +18,8 @@ namespace Wiktionary
             this.InitializeComponent();
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
+            if (!String.IsNullOrEmpty(Notification.Mot))
+                MotRecherche.Text = Notification.Mot;
         }
 
         /// <summary>

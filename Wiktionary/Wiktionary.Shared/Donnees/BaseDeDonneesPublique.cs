@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -23,6 +24,8 @@ namespace Wiktionary.Donnees
 
         public ObservableCollection<Mot> RecupererDefinitions()
         {
+            try
+            {
             HttpResponseMessage response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions")).Result;
 
             if (response.IsSuccessStatusCode)
@@ -40,36 +43,49 @@ namespace Wiktionary.Donnees
 
                 return listeDefinitionsPubliques;
             }
+            }
+            catch (Exception e)
+            {
+                throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
+            }
 
             return new ObservableCollection<Mot>();
         }
 
         public bool AjouterMot(Mot motAjoute)
         {
+            HttpResponseMessage response;
             try
             {
-                HttpResponseMessage response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul"))).Result;
-                return response.IsSuccessStatusCode;
+                response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul"))).Result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return false;
+                throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
             }
-            
+
+            if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+                throw new Exception("Vous n'êtes pas autorisé à éditer cette définition.");
+
+            return response.IsSuccessStatusCode;
         }
 
         public bool SupprimerMot(Mot motSupprime)
         {
+            HttpResponseMessage response;
             try
             {
-                HttpResponseMessage response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"))).Result;
-                return response.IsSuccessStatusCode;
+                response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"))).Result;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return false;
+                throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
             }
-            
+
+            if (response.StatusCode.Equals(HttpStatusCode.Unauthorized))
+                throw new Exception("Vous n'êtes pas autorisé à éditer cette définition.");
+
+            return response.IsSuccessStatusCode;
         }
 
         public bool ModifierMot(Mot motModifie)
