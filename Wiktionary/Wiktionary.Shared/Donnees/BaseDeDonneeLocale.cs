@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using SQLite;
 using Wiktionary.Model;
@@ -13,7 +14,8 @@ namespace Wiktionary.Donnees
 
         private BaseDeDonneeLocale()
         {
-            _connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+            var folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            _connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, "wiktionaryLocal.bdd"));
             InitialiserBddLocale();
         }
 
@@ -69,8 +71,6 @@ namespace Wiktionary.Donnees
             {
                 return false;
             }
-
-
         }
 
         public bool ModifierMot(Mot motModifie)

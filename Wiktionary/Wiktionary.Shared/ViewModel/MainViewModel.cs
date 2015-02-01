@@ -275,7 +275,7 @@ namespace Wiktionary.ViewModel
 
         private void ToastHandling(object sender, PropertyChangedEventArgs e)
         {
-            MotRecherche = Notification.Mot;
+            ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Equals(Notification.Mot.ToLower()) && m.Depot == Depot.Public));
         }
         #endregion
 

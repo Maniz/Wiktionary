@@ -83,7 +83,6 @@ namespace Wiktionary.Donnees
                 var fichierModifie = _dossierRoamingWikitionary.GetFileAsync(motModifie.Word + ".json").AsTask().Result;
                 fichierModifie.DeleteAsync().AsTask().Wait();
                 return AjouterMot(motModifie);
-
             }
             catch (Exception)
             {
