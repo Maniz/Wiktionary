@@ -19,7 +19,6 @@
                 <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotAjout, Mode=TwoWay}"/>
                 <Grid>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button Content="Annuler" Click="Annuler_Click_Flyout"/>
                         <Button Content="Valider" Click="Ajouter_Click_Flyout" Command="{Binding AjouterMotCommand}"/>
                     </StackPanel>
                 </Grid>
@@ -46,7 +45,6 @@
                 <ComboBox ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding MotModifie.Depot}" IsEnabled="False"/>
                 <Grid>
                     <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <Button Content="Annuler" Click="Annuler_Click_Flyout"/>
                         <Button Content="Valider" Click="Ajouter_Click_Flyout" Command="{Binding ModifierMotCommand}"/>
                     </StackPanel>
                 </Grid>

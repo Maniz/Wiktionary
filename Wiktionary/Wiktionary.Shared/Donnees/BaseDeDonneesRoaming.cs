@@ -56,6 +56,9 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
+            if (String.IsNullOrEmpty(motAjoute.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+
             try
             {
                 var fichierRoaming = _dossierRoamingWikitionary.CreateFileAsync(motAjoute.Word + ".json", CreationCollisionOption.FailIfExists).AsTask().Result;
@@ -78,6 +81,9 @@ namespace Wiktionary.Donnees
 
         public bool ModifierMot(Mot motModifie)
         {
+            if (String.IsNullOrEmpty(motModifie.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+
             try
             {
                 var fichierModifie = _dossierRoamingWikitionary.GetFileAsync(motModifie.Word + ".json").AsTask().Result;

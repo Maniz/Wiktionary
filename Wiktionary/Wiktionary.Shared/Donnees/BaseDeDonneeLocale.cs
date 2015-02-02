@@ -53,15 +53,15 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
+            if (String.IsNullOrEmpty(motAjoute.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+            if (_connection.Table<Mot>().ToListAsync().Result.Any(mot => mot.Word == motAjoute.Word))
+                throw new Exception("Le mot est déjà présent, veuillez modifier le mot existant");
+
             try
             {
-                if (_connection.Table<Mot>().ToListAsync().Result.All(mot => mot.Word != motAjoute.Word))
-                {
-                    _connection.InsertAsync(motAjoute).Wait();
-                    return true;
-                }
-
-                return false;
+                _connection.InsertAsync(motAjoute).Wait();
+                return true;
             }
             catch (SQLiteException ex)
             {
@@ -75,6 +75,9 @@ namespace Wiktionary.Donnees
 
         public bool ModifierMot(Mot motModifie)
         {
+            if (String.IsNullOrEmpty(motModifie.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+
             try
             {
                 _connection.UpdateAsync(motModifie).Wait();

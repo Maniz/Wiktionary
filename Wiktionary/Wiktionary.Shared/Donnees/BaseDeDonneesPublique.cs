@@ -54,10 +54,13 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
+            if (String.IsNullOrEmpty(motAjoute.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+
             HttpResponseMessage response;
             try
             {
-                response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul"))).Result;
+                response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul")).Result;
             }
             catch (Exception e)
             {
@@ -75,7 +78,7 @@ namespace Wiktionary.Donnees
             HttpResponseMessage response;
             try
             {
-                response = new HttpClient().GetAsync(new Uri(Uri.EscapeDataString("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul"))).Result;
+                response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
             }
             catch (Exception e)
             {
@@ -90,6 +93,9 @@ namespace Wiktionary.Donnees
 
         public bool ModifierMot(Mot motModifie)
         {
+            if (String.IsNullOrEmpty(motModifie.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+
             return SupprimerMot(motModifie) && AjouterMot(motModifie);
         }
     }
