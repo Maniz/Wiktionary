@@ -18,12 +18,19 @@ namespace Wiktionary.ViewModel
 
         #region Propriétés
 
-        public enum Depot
+        public enum DepotGlobal
         {
             Local,
             Roaming,
             Public,
             Tous
+        }
+
+        public enum Depot
+        {
+            Local,
+            Roaming,
+            Public
         }
 
         private Depot _depotAjout;
@@ -51,9 +58,9 @@ namespace Wiktionary.ViewModel
             }
         }
 
-        private Depot _depotRecherche;
+        private DepotGlobal _depotRecherche;
 
-        public Depot DepotRecherche
+        public DepotGlobal DepotRecherche
         {
             get { return _depotRecherche; }
             set
@@ -107,10 +114,10 @@ namespace Wiktionary.ViewModel
             if (ListeDefinitions == null)
                 ListeDefinitions = new ObservableCollection<Mot>();
 
-            if (DepotRecherche == Depot.Tous)
+            if (DepotRecherche == DepotGlobal.Tous)
                 ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower())));
             else
-                ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower()) && m.Depot == DepotRecherche));
+                ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Contains(MotRecherche.ToLower()) && m.Depot.ToString() == DepotRecherche.ToString()));
 
 
         }
@@ -141,7 +148,7 @@ namespace Wiktionary.ViewModel
             RecupererDefinitions();
             DepotAjout = Depot.Local;
             MotRecherche = "";
-            DepotRecherche = Depot.Tous;
+            DepotRecherche = DepotGlobal.Tous;
 
             Notification.GlobalPropertyChanged += ToastHandling;
         }
@@ -182,9 +189,6 @@ namespace Wiktionary.ViewModel
                     case Depot.Public:
                         result = BaseDeDonneesPublique.Instance.AjouterMot(mot);
                         break;
-                    case Depot.Tous:
-
-                        break;
                 }
             }
             catch (Exception e)
@@ -215,8 +219,6 @@ namespace Wiktionary.ViewModel
                         break;
                     case Depot.Public:
                         result = BaseDeDonneesPublique.Instance.SupprimerMot(motSupprime);
-                        break;
-                    case Depot.Tous:
                         break;
                 }
             }
@@ -264,6 +266,14 @@ namespace Wiktionary.ViewModel
 
         }
 
+        public static IEnumerable<DepotGlobal> DepotGlobalValeurs
+        {
+            get
+            {
+                return Enum.GetValues(typeof(DepotGlobal)).Cast<DepotGlobal>();
+            }
+        }
+
         public static IEnumerable<Depot> DepotValeurs
         {
             get
@@ -275,7 +285,7 @@ namespace Wiktionary.ViewModel
         private void ToastHandling(object sender, PropertyChangedEventArgs e)
         {
             MotRecherche = Notification.Mot;
-            DepotRecherche = Depot.Public;
+            DepotRecherche = DepotGlobal.Public;
         }
         #endregion
 
