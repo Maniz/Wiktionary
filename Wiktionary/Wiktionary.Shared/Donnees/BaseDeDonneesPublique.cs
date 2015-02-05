@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
@@ -56,11 +57,13 @@ namespace Wiktionary.Donnees
         {
             if (String.IsNullOrEmpty(motAjoute.Definition))
                 throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+            if (_instance.RecupererDefinitions().Any(m => m.Word == motAjoute.Word))
+                throw new Exception("Le mot est déjà présent, veuillez modifier le mot existant");
 
             HttpResponseMessage response;
             try
             {
-                response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul")).Result;
+                response = new HttpClient().GetAsync("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + Uri.EscapeDataString(motAjoute.Word) + "/" + Uri.EscapeDataString(motAjoute.Definition) + "/anthopaul").Result;
             }
             catch (Exception e)
             {
@@ -78,7 +81,7 @@ namespace Wiktionary.Donnees
             HttpResponseMessage response;
             try
             {
-                response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
+                response = new HttpClient().GetAsync("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + Uri.EscapeDataString(motSupprime.Word) + "/anthopaul").Result;
             }
             catch (Exception e)
             {

@@ -87,7 +87,7 @@
                 <TextBox  Name="MotRecherche" Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Button Name="AjouterBouton" Content="Ajouter une nouvelle définition" FlyoutBase.AttachedFlyout="{StaticResource AjoutFlyout}" Click="Ajouter_Click"/>
             </StackPanel>
-            <ListView HorizontalAlignment="Left" Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}" Height="979">
+            <ListView HorizontalAlignment="Stretch" Name="ListeDefinition" ItemsSource="{Binding ListeDefinitionsFiltree}" ItemTemplate="{StaticResource DefinitionTemplate}" Height="979">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
