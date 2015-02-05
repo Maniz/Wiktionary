@@ -24,7 +24,7 @@ namespace Wiktionary.Donnees
             try
             {
                 var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
-
+                
                 var listeDefinitionsLocales = new ObservableCollection<Mot>(connection.Table<Mot>().ToListAsync().Result);
 
                 foreach (var mot in listeDefinitionsLocales)
@@ -42,11 +42,15 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
+            var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+
+            if (String.IsNullOrEmpty(motAjoute.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+            if (connection.Table<Mot>().ToListAsync().Result.Any(mot => mot.Word == motAjoute.Word))
+                throw new Exception("Le mot est déjà présent, veuillez modifier le mot existant");
+
             try
             {
-                var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
-
-
                 if (connection.Table<Mot>().ToListAsync().Result.All(mot => mot.Word != motAjoute.Word))
                 {
                     connection.InsertAsync(motAjoute).Wait();
@@ -59,14 +63,13 @@ namespace Wiktionary.Donnees
             {
                 return false;
             }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         public bool ModifierMot(Mot motModifie)
         {
+            if (String.IsNullOrEmpty(motModifie.Definition))
+                throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
+
             try
             {
                 var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");

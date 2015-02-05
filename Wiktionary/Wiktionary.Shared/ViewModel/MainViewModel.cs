@@ -196,7 +196,8 @@ namespace Wiktionary.ViewModel
 
             if (result)
             {
-                ListeDefinitions.Add(mot);
+                if (!(ListeDefinitions.Count(motListe => motListe.Word == mot.Word && mot.Depot == motListe.Depot) > 0))
+                    ListeDefinitions.Add(mot);
                 RechargeList();
             }
         }
@@ -275,7 +276,8 @@ namespace Wiktionary.ViewModel
 
         private void ToastHandling(object sender, PropertyChangedEventArgs e)
         {
-            ListeDefinitionsFiltree = new ObservableCollection<Mot>(ListeDefinitions.Where(m => m.Word.ToLower().Equals(Notification.Mot.ToLower()) && m.Depot == Depot.Public));
+            MotRecherche = Notification.Mot;
+            DepotRecherche = Depot.Public;
         }
         #endregion
 
