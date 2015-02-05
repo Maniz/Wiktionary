@@ -9,10 +9,10 @@ namespace Wiktionary.Model
     /// </summary>
     public class Mot
     {
-        [Column("definition"), NotNull]
-        public string Definition { get; set; }
         [PrimaryKey, Column("word"), NotNull]
         public string Word { get; set; }
+        [Column("definition"), NotNull]
+        public string Definition { get; set; }
         [JsonIgnore]
         public MainViewModel.Depot Depot { get; set; }
         [JsonIgnore]

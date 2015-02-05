@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using SQLite;
 using Wiktionary.Model;
 using Wiktionary.ViewModel;
@@ -10,34 +11,22 @@ namespace Wiktionary.Donnees
 {
     public class BaseDeDonneeLocale : IBaseDeDonnees
     {
-        private static BaseDeDonneeLocale _instance;
-
-        private BaseDeDonneeLocale()
+        public static void InitialiserBddLocale()
         {
-            var folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            _connection = new SQLiteAsyncConnection(Path.Combine(folder.Path, "wiktionaryLocal.bdd"));
-            InitialiserBddLocale();
-        }
+            var connection = new SQLiteConnection("wiktionaryLocal.bdd");
+            //await connection.DropTableAsync<Mot>();
+            connection.CreateTable<Mot>();
 
-        public static BaseDeDonneeLocale Instance
-        {
-            get { return _instance ?? (_instance = new BaseDeDonneeLocale()); }
-        }
-
-        private readonly SQLiteAsyncConnection _connection;
-
-        private async void InitialiserBddLocale()
-        {
-            //await _connection.DropTableAsync<Mot>();
-            await _connection.CreateTableAsync<Mot>();
         }
 
         public ObservableCollection<Mot> RecupererDefinitions()
         {
             try
             {
-                var listeDefinitionsLocales = new ObservableCollection<Mot>(_connection.Table<Mot>().ToListAsync().Result);
+                var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
                 
+                var listeDefinitionsLocales = new ObservableCollection<Mot>(connection.Table<Mot>().ToListAsync().Result);
+
                 foreach (var mot in listeDefinitionsLocales)
                 {
                     mot.Depot = MainViewModel.Depot.Local;
@@ -53,21 +42,24 @@ namespace Wiktionary.Donnees
 
         public bool AjouterMot(Mot motAjoute)
         {
+            var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+
             if (String.IsNullOrEmpty(motAjoute.Definition))
                 throw new Exception("Une définition doit être renseignée pour ajouter un nouveau mot.");
-            if (_connection.Table<Mot>().ToListAsync().Result.Any(mot => mot.Word == motAjoute.Word))
+            if (connection.Table<Mot>().ToListAsync().Result.Any(mot => mot.Word == motAjoute.Word))
                 throw new Exception("Le mot est déjà présent, veuillez modifier le mot existant");
 
             try
             {
-                _connection.InsertAsync(motAjoute).Wait();
-                return true;
-            }
-            catch (SQLiteException ex)
-            {
+                if (connection.Table<Mot>().ToListAsync().Result.All(mot => mot.Word != motAjoute.Word))
+                {
+                    connection.InsertAsync(motAjoute).Wait();
+                    return true;
+                }
+
                 return false;
             }
-            catch (Exception)
+            catch (SQLiteException ex)
             {
                 return false;
             }
@@ -80,7 +72,9 @@ namespace Wiktionary.Donnees
 
             try
             {
-                _connection.UpdateAsync(motModifie).Wait();
+                var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+
+                connection.UpdateAsync(motModifie).Wait();
                 return true;
             }
             catch (Exception)
@@ -93,7 +87,9 @@ namespace Wiktionary.Donnees
         {
             try
             {
-                _connection.DeleteAsync(motSupprime).Wait();
+                var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+
+                connection.DeleteAsync(motSupprime).Wait();
                 return true;
             }
             catch (Exception)

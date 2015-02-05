@@ -152,13 +152,13 @@ namespace Wiktionary.ViewModel
 
         private void RecupererDefinitions()
         {
+            
             try
             {
                 IEnumerable<Mot> liste = BaseDeDonneesPublique.Instance.RecupererDefinitions();
                 IEnumerable<Mot> listeRoaming = BaseDeDonneesRoaming.Instance.RecupererDefinitions();
-                ListeDefinitions =
-                    new ObservableCollection<Mot>(
-                        liste.Union(BaseDeDonneeLocale.Instance.RecupererDefinitions()).Union(listeRoaming));
+                IEnumerable<Mot> listeLocale = new BaseDeDonneeLocale().RecupererDefinitions();
+                ListeDefinitions = new ObservableCollection<Mot>( liste.Union(listeLocale).Union(listeRoaming));
                 ListeDefinitionsFiltree = ListeDefinitions;
             }
             catch (Exception e)
@@ -176,7 +176,7 @@ namespace Wiktionary.ViewModel
                 switch (DepotAjout)
                 {
                     case Depot.Local:
-                        result = BaseDeDonneeLocale.Instance.AjouterMot(mot);
+                        result = new BaseDeDonneeLocale().AjouterMot(mot);
                         break;
                     case Depot.Roaming:
                         result = BaseDeDonneesRoaming.Instance.AjouterMot(mot);
@@ -210,7 +210,7 @@ namespace Wiktionary.ViewModel
                 switch (motSupprime.Depot)
                 {
                     case Depot.Local:
-                        result = BaseDeDonneeLocale.Instance.SupprimerMot(motSupprime);
+                        result = new BaseDeDonneeLocale().SupprimerMot(motSupprime);
                         break;
                     case Depot.Roaming:
                         result = BaseDeDonneesRoaming.Instance.SupprimerMot(motSupprime);
@@ -242,7 +242,7 @@ namespace Wiktionary.ViewModel
                 switch (MotModifie.Depot)
                 {
                     case Depot.Local:
-                        result = BaseDeDonneeLocale.Instance.ModifierMot(MotModifie);
+                        result = new BaseDeDonneeLocale().ModifierMot(MotModifie);
                         break;
                     case Depot.Roaming:
                         result = BaseDeDonneesRoaming.Instance.ModifierMot(MotModifie);
