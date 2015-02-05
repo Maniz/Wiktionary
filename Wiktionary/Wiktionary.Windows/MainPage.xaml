@@ -83,7 +83,7 @@
         <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
             <TextBlock Text="Wiktionary" TextAlignment="Center" FontSize="36" />
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                <ComboBox Margin="0,0,10,0" Width="125" ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotRecherche, Mode=TwoWay}"></ComboBox>
+                <ComboBox Margin="0,0,10,0" Width="125" ItemsSource="{Binding DepotGlobalValeurs}" SelectedItem="{Binding DepotRecherche, Mode=TwoWay}"></ComboBox>
                 <TextBox  Name="MotRecherche" Height="35" Width="750" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Button Name="AjouterBouton" Content="Ajouter une nouvelle définition" FlyoutBase.AttachedFlyout="{StaticResource AjoutFlyout}" Click="Ajouter_Click"/>
             </StackPanel>

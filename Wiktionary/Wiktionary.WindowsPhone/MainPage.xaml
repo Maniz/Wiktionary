@@ -102,7 +102,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <ComboBox Width="125" ItemsSource="{Binding DepotValeurs}" SelectedItem="{Binding DepotRecherche, Mode=TwoWay}"></ComboBox>
+            <ComboBox Width="125" ItemsSource="{Binding DepotGlobalValeurs}" SelectedItem="{Binding DepotRecherche, Mode=TwoWay}"></ComboBox>
             <TextBox Name="MotRecherche" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Text="{Binding MotRecherche, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="2"/>
             <Button Name="AjouterBouton" Content="Ajouter" Grid.Column="2" Margin="2" FlyoutBase.AttachedFlyout="{StaticResource AjoutFlyout}" Click="Ajouter_Click"/>
         </Grid>
