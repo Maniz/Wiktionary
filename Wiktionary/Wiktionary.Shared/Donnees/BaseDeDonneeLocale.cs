@@ -59,7 +59,7 @@ namespace Wiktionary.Donnees
 
                 return false;
             }
-            catch (SQLiteException ex)
+            catch (SQLiteException)
             {
                 return false;
             }

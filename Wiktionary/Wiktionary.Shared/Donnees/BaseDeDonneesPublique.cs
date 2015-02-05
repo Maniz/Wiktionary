@@ -44,7 +44,7 @@ namespace Wiktionary.Donnees
                 return listeDefinitionsPubliques;
             }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
             }
@@ -62,7 +62,7 @@ namespace Wiktionary.Donnees
             {
                 response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/AddDefinition/" + motAjoute.Word + "/" + motAjoute.Definition + "/anthopaul")).Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
             }
@@ -80,7 +80,7 @@ namespace Wiktionary.Donnees
             {
                 response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/RemoveDefinition/" + motSupprime.Word + "/anthopaul")).Result;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("La connexion au dépôt public n'a pas pu être établie.");
             }
