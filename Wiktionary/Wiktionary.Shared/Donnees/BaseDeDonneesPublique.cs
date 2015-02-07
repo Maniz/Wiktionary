@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using Newtonsoft.Json;
@@ -13,10 +12,9 @@ namespace Wiktionary.Donnees
 {
     public class BaseDeDonneesPublique : IBaseDeDonnees
     {
-
         private static BaseDeDonneesPublique _instance;
 
-        private BaseDeDonneesPublique(){}
+        private BaseDeDonneesPublique() { }
 
         public static BaseDeDonneesPublique Instance
         {
@@ -27,23 +25,23 @@ namespace Wiktionary.Donnees
         {
             try
             {
-            HttpResponseMessage response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions")).Result;
+                HttpResponseMessage response = new HttpClient().GetAsync(new Uri("http://wiktionary.azurewebsites.net/Wiktionary.svc/GetAllDefinitions")).Result;
 
-            if (response.IsSuccessStatusCode)
-            {
-                string json = response.Content.ReadAsStringAsync().Result;
-                var data = JArray.Parse(json);
-
-                ObservableCollection<Mot> listeDefinitionsPubliques = new ObservableCollection<Mot>();
-                foreach (var mot in data)
+                if (response.IsSuccessStatusCode)
                 {
-                    Mot m = JsonConvert.DeserializeObject<Mot>(mot.ToString());
-                    m.Depot = MainViewModel.Depot.Public;
-                    listeDefinitionsPubliques.Add(m);
-                }
+                    string json = response.Content.ReadAsStringAsync().Result;
+                    var data = JArray.Parse(json);
 
-                return listeDefinitionsPubliques;
-            }
+                    ObservableCollection<Mot> listeDefinitionsPubliques = new ObservableCollection<Mot>();
+                    foreach (var mot in data)
+                    {
+                        Mot m = JsonConvert.DeserializeObject<Mot>(mot.ToString());
+                        m.Depot = MainViewModel.Depot.Public;
+                        listeDefinitionsPubliques.Add(m);
+                    }
+
+                    return listeDefinitionsPubliques;
+                }
             }
             catch (Exception)
             {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using SQLite;
 using Wiktionary.Model;
 using Wiktionary.ViewModel;
@@ -11,12 +9,10 @@ namespace Wiktionary.Donnees
 {
     public class BaseDeDonneeLocale : IBaseDeDonnees
     {
-        public static void InitialiserBddLocale()
+        public async static void InitialiserBddLocale()
         {
-            var connection = new SQLiteConnection("wiktionaryLocal.bdd");
-            //await connection.DropTableAsync<Mot>();
-            connection.CreateTable<Mot>();
-
+            var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
+            await connection.CreateTableAsync<Mot>();
         }
 
         public ObservableCollection<Mot> RecupererDefinitions()
@@ -24,7 +20,7 @@ namespace Wiktionary.Donnees
             try
             {
                 var connection = new SQLiteAsyncConnection("wiktionaryLocal.bdd");
-                
+
                 var listeDefinitionsLocales = new ObservableCollection<Mot>(connection.Table<Mot>().ToListAsync().Result);
 
                 foreach (var mot in listeDefinitionsLocales)

@@ -3,6 +3,9 @@ using Wiktionary.Model;
 
 namespace Wiktionary.Donnees
 {
+    /// <summary>
+    /// Interface pour les différentes bases de données
+    /// </summary>
     public interface IBaseDeDonnees
     {
         ObservableCollection<Mot> RecupererDefinitions();

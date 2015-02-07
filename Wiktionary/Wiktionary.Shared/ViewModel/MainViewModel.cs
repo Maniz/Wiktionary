@@ -140,6 +140,7 @@ namespace Wiktionary.ViewModel
         /// </summary>
         public MainViewModel()
         {
+            BaseDeDonneeLocale.InitialiserBddLocale();
             Notification.AbonnementNotification();
             AjouterMotCommand = new RelayCommand(AjouterMot);
             SupprimerMotCommand = new RelayCommand<string>(param => SupprimerMot(new Mot() { Cle = param }));
@@ -149,7 +150,6 @@ namespace Wiktionary.ViewModel
             DepotAjout = Depot.Local;
             MotRecherche = "";
             DepotRecherche = DepotGlobal.Tous;
-
             Notification.GlobalPropertyChanged += ToastHandling;
         }
 
@@ -157,7 +157,6 @@ namespace Wiktionary.ViewModel
 
         private void RecupererDefinitions()
         {
-            
             try
             {
                 IEnumerable<Mot> liste = BaseDeDonneesPublique.Instance.RecupererDefinitions();
